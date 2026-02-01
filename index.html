@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-black">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rakesh Kumar M M | Modern Software Craftsman</title>
+
+    <!-- SEO -->
+    <meta name="description"
+        content="Portfolio of Rakesh Kumar M M, a creative software architect building immersive, scalable web systems." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'neon': '#00FF6A', // The requested neon green
+                        'black-pure': '#000000',
+                        'charcoal': '#0a0a0a',
+                        'glass': 'rgba(255, 255, 255, 0.03)',
+                        'glass-hover': 'rgba(255, 255, 255, 0.08)',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    cursor: {
+                        none: 'none',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 12s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.16/dist/framer-motion.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            cursor: none;
+            overflow-x: hidden;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Noise Texture */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9998;
+            /* Below cursor */
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00FF6A;
+        }
+
+        /* Utilities */
+        .text-stroke {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .text-stroke:hover {
+            -webkit-text-stroke: 1px #00FF6A;
+            color: rgba(0, 255, 106, 0.1);
+        }
+
+        /* Cursor */
+        .custom-cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00FF6A;
+        }
+
+        .custom-cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- App Root -->
+    <div id="root"></div>
+
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
+        import { getDatabase, ref, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCd98eh-kVlHOXQJ3xyqFcjWxnWoV-gHNI",
+            authDomain: "portfolio-3e851.firebaseapp.com",
+            databaseURL: "https://portfolio-3e851-default-rtdb.firebaseio.com",
+            projectId: "portfolio-3e851",
+            storageBucket: "portfolio-3e851.firebasestorage.app",
+            messagingSenderId: "238693477072",
+            appId: "1:238693477072:web:275291172c5e50bf8b4cd5",
+            measurementId: "G-LMPNXS7XK6"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+            const database = getDatabase(app);
+
+            console.log("🔥 Firebase initialized successfully");
+            window.firebaseApp = app;
+            window.firebaseDb = database;
+
+            // --- Visitor Tracking Logic ---
+            function trackVisitor() {
+                try {
+                    const VISITOR_KEY = 'portfolio_visitor_id';
+                    let visitorId = localStorage.getItem(VISITOR_KEY);
+                    let isFirstVisit = false;
+
+                    // If no ID exists, create one
+                    if (!visitorId) {
+                        visitorId = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                        localStorage.setItem(VISITOR_KEY, visitorId);
+                        isFirstVisit = true;
+                    }
+
+                    // Create a reference to the 'visitors' node
+                    const visitsRef = ref(database, 'visitors');
+
+                    // Data to store
+                    const visitData = {
+                        visitorId: visitorId,
+                        timestamp: serverTimestamp(),
+                        lastSeen: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                        resolution: `${window.screen.width}x${window.screen.height}`,
+                        isFirstVisit: isFirstVisit
+                    };
+
+                    // Push new visit entry
+                    push(visitsRef, visitData)
+                        .then(() => console.log("✅ Visitor logged to Firebase DB:", visitorId))
+                        .catch((err) => console.error("❌ Error logging visitor:", err));
+
+                } catch (err) {
+                    console.error("Tracking Error:", err);
+                }
+            }
+
+            // Run tracking
+            trackVisitor();
+
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+        }
+    </script>
+
+    <!-- Main React App -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+        const { motion, useScroll, useTransform, useSpring, AnimatePresence, useMotionValue, useMotionTemplate } = window.Motion;
+
+        // --- Data Assets ---
+        const SKILLS_LOGOS = [
+            { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+            { name: "Express", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" },
+            { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+            { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+            { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+            { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+            { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+            { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+            { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" },
+            { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+        ];
+
+        // --- Components ---
+
+        // 1. Dynamic Background Pattern
+        const Background = () => {
+            const mouseX = useMotionValue(0);
+            const mouseY = useMotionValue(0);
+
+            useEffect(() => {
+                const handleMove = (e) => {
+                    mouseX.set(e.clientX);
+                    mouseY.set(e.clientY);
+                };
+                window.addEventListener('mousemove', handleMove);
+                return () => window.removeEventListener('mousemove', handleMove);
+            }, []);
+
+            return (
+                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,#0a0a0a,transparent)]" />
+                    {/* Grid Pattern */}
+                    <div
+                        className="absolute inset-0 opacity-20"
+                        style={{
+                            backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
+                            backgroundSize: '40px 40px',
+                            maskImage: 'radial-gradient(circle at center, black, transparent 80%)'
+                        }}
+                    />
+
+                    {/* Following Spotlight */}
+                    <motion.div
+                        className="absolute w-[600px] h-[600px] bg-neon/5 rounded-full blur-[100px]"
+                        style={{
+                            left: mouseX,
+                            top: mouseY,
+                            translateX: '-50%',
+                            translateY: '-50%'
+                        }}
+                    />
+                </div>
+            );
+        };
+
+        // 2. Custom Cursor (Enhanced)
+        const Cursor = () => {
+            const mouseX = useMotionValue(-100);
+            const mouseY = useMotionValue(-100);
+
+            const springConfig = { damping: 25, stiffness: 700 };
+            const dotX = useSpring(mouseX, springConfig);
+            const dotY = useSpring(mouseY, springConfig);
+
+            const outlineX = useSpring(mouseX, { damping: 20, stiffness: 300 });
+            const outlineY = useSpring(mouseY, { damping: 20, stiffness: 300 });
+
+            useEffect(() => {
+                const moveCursor = (e) => {
+                    mouseX.set(e.clientX);
+                    mouseY.set(e.clientY);
+                };
+                window.addEventListener("mousemove", moveCursor);
+                return () => window.removeEventListener("mousemove", moveCursor);
+            }, []);
+
+            return (
+                <>
+                    <motion.div
+                        className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-dot"
+                        style={{ left: dotX, top: dotY, translateX: "-50%", translateY: "-50%" }}
+                    />
+                    <motion.div
+                        className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-outline mix-blend-difference"
+                        style={{ left: outlineX, top: outlineY, translateX: "-50%", translateY: "-50%" }}
+                    />
+                </>
+            );
+        };
+
+        // 3. Navigation
+        const Navbar = () => {
+            const links = ["About", "Skills", "Projects", "Contact"];
+
+            return (
+                <motion.nav
+                    initial={{ y: -100 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 0.8, ease: "circOut" }}
+                    className="fixed top-0 left-0 w-full z-40 flex justify-between items-center px-8 py-6 mix-blend-difference text-white backdrop-blur-sm"
+                >
+                    <div className="cursor-pointer group">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-white group-hover:text-neon transition-colors duration-300">
+                            <path d="M12,4.5c-4.1,0-7.5,3.4-7.5,7.5c0,4.1,3.4,7.5,7.5,7.5s7.5-3.4,7.5-7.5C19.5,7.9,16.1,4.5,12,4.5z M7.5,10 c0.8,0,1.5,0.7,1.5,1.5S8.3,13,7.5,13S6,12.3,6,11.5S6.7,10,7.5,10z M12,17.5c-2,0-3.8-1.2-4.5-3h9C15.8,16.3,14,17.5,12,17.5z M16.5,13c-0.8,0-1.5-0.7-1.5-1.5S15.7,10,16.5,10s1.5,0.7,1.5,1.5S17.3,13,16.5,13z" />
+                            <path d="M4,7c0-1.7,1.3-3,3-3s3,1.3,3,3" className="text-white group-hover:text-neon opacity-50" />
+                            <path d="M17,7c0-1.7,1.3-3,3-3s3,1.3,3,3" className="text-white group-hover:text-neon opacity-50" />
+                        </svg>
+                    </div>
+                    <div className="hidden md:flex gap-8">
+                        {links.map((link) => (
+                            <a key={link} href={`#${link.toLowerCase()}`} className="relative group text-sm font-light tracking-wide hover:text-neon transition-colors">
+                                {link}
+                                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-neon group-hover:w-full transition-all duration-300"></span>
+                            </a>
+                        ))}
+                    </div>
+                </motion.nav>
+            );
+        };
+
+        const Intro = ({ onComplete }) => {
+            const words = [
+                "Hello!",         // English
+                "Namaste",        // Hindi
+                "Namaskara",      // Kannada
+                "Namaskaram",     // Malayalam / Telugu
+                "Hallo",          // German
+                "Bonjour",        // French
+                "Hola",           // Spanish
+                "Konnichiwa",     // Japanese
+                "Nǐ hǎo",         // Chinese
+                "Marhaba",        // Arabic
+                "வணக்கம்!"        // Tamil (Last)
+            ];
+
+            const [index, setIndex] = useState(0);
+
+            useEffect(() => {
+                if (index >= words.length) {
+                    // Fade out delay
+                    setTimeout(onComplete, 800);
+                    return;
+                }
+
+                const timeout = setTimeout(() => {
+                    setIndex(prev => prev + 1);
+                }, index === words.length - 1 ? 2000 : 250); // Longer pause on Vanakkam
+
+                return () => clearTimeout(timeout);
+            }, [index]);
+
+            if (index >= words.length) return null;
+
+            return (
+                <motion.div
+                    className="fixed inset-0 z-50 bg-black flex items-center justify-center p-4"
+                    exit={{ opacity: 0, y: -50 }}
+                >
+                    <div className="flex items-center gap-4">
+                        {/* Green blinker */}
+                        <span className="w-2 h-2 rounded-full bg-neon animate-pulse"></span>
+                        <motion.h2
+                            key={index}
+                            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+                            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                            exit={{ opacity: 0, y: -20, filter: 'blur(5px)' }}
+                            transition={{ duration: 0.2 }}
+                            className="text-4xl md:text-6xl font-mono text-white"
+                        >
+                            {words[index]}
+                        </motion.h2>
+                    </div>
+                </motion.div>
+            )
+        }
+
+        // 4. Hero Section
+        const Hero = () => {
+            return (
+                <section id="home" className="h-screen w-full flex flex-col justify-center items-center relative z-10 px-4">
+
+                    {/* Main Name */}
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                        className="text-center z-10 space-y-4"
+                    >
+                        <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-none cursor-default select-none group flex flex-col items-center">
+                            <div className="flex gap-3 md:gap-8 flex-wrap justify-center">
+                                <span className="inline-block hover:text-neon transition-colors duration-500 hover:scale-105 transform">RAKESH</span>
+                                <span className="inline-block hover:text-neon transition-colors duration-500 hover:scale-105 transform">KUMAR</span>
+                            </div>
+                            <span className="text-stroke hover:text-white transition-colors duration-500 mt-2 pt-2 block text-6xl md:text-[10rem] opacity-80">M M</span>
+                        </h1>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.2 }}
+                        className="mt-8 flex flex-col items-center gap-4"
+                    >
+                        <p className="text-neon font-serif text-xl md:text-3xl font-bold tracking-wider uppercase relative z-20 mt-4">
+                            MODERN SOFTWARE CRAFTSMAN
+                        </p>
+                        <p className="text-gray-400 text-sm max-w-md text-center">
+                            Building digital systems with precision, passion, and performance.
+                        </p>
+                    </motion.div>
+
+                    {/* Scroll Indicator */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 2, duration: 2 }}
+                        className="absolute bottom-12 flex flex-col items-center gap-2 text-gray-600"
+                    >
+                        <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-neon to-transparent animate-pulse" />
+                    </motion.div>
+                </section>
+            )
+        };
+
+        // 5. About Section
+        const About = () => {
+            return (
+                <section id="about" className="py-32 px-6 md:px-20 max-w-7xl mx-auto relative z-10">
+                    <div className="grid md:grid-cols-2 gap-16 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <h2 className="text-sm font-mono text-neon mb-4 tracking-widest">01 / IDENTITY</h2>
+                            <p className="text-xl md:text-2xl leading-relaxed text-gray-300 font-light text-left">
+                                I am <span className="text-white font-medium">Rakesh Kumar M M</span>, a <span className="text-neon">Modern Software Craftsman</span>. I create scalable digital systems with precision.
+                                <br /><br />
+                                Currently pursuing <strong>Electronics and Communication Engineering</strong> at <strong>R.M.K. Engineering College</strong> (2024-2028) with a <span className="text-neon">8.33 CGPA</span>. My work bridges the gap between <span className="text-neon italic">Fullstack Development</span> and <span className="text-neon italic">Network Security</span>.
+                            </p>
+                            <div className="mt-8 grid grid-cols-2 gap-4">
+                                <div className="border border-white/10 p-4 rounded hover:border-neon/30 transition-colors">
+                                    <h3 className="text-2xl font-bold text-white">4+</h3>
+                                    <p className="text-gray-500 text-sm">Major Projects</p>
+                                </div>
+                                <div className="border border-white/10 p-4 rounded hover:border-neon/30 transition-colors">
+                                    <h3 className="text-2xl font-bold text-white">10+</h3>
+                                    <p className="text-gray-500 text-sm">Tech Stack</p>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        <div className="relative group flex justify-center">
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                className="relative z-10 p-2 border border-neon/20 bg-black/50 backdrop-blur-sm max-w-sm"
+                            >
+                                <div className="aspect-[3/4] bg-neutral-900 w-full overflow-hidden relative">
+                                    <img src="./profile.png" alt="Rakesh Kumar M M" className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0" />
+                                    <div className="absolute inset-0 bg-neon/10 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                </div>
+                            </motion.div>
+                            {/* Decorative Elements around image */}
+                            <div className="absolute -top-4 -right-4 w-24 h-24 border-t-2 border-r-2 border-neon/50 opacity-50 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform"></div>
+                            <div className="absolute -bottom-4 -left-4 w-24 h-24 border-b-2 border-l-2 border-neon/50 opacity-50 group-hover:-translate-x-2 group-hover:translate-y-2 transition-transform"></div>
+                        </div>
+                    </div>
+                </section>
+            )
+        };
+
+        // 5.5 Services Section (New)
+        const Services = () => {
+            const services = [
+                { title: "Fullstack Architecture", icon: "layers", desc: "Building end-to-end scalable web applications using MERN & Firebase stack." },
+                { title: "Network Security", icon: "shield-check", desc: "Implementing robust security protocols and real-time monitoring systems." },
+                { title: "UI/UX Engineering", icon: "palette", desc: "Crafting immersive, motion-rich user experiences with modern tools." }
+            ];
+
+            return (
+                <section className="py-20 border-b border-white/5 relative z-10">
+                    <div className="max-w-7xl mx-auto px-6 md:px-20">
+                        <div className="grid md:grid-cols-3 gap-8">
+                            {services.map((s, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className="p-8 bg-zinc-900/30 border border-white/5 hover:border-neon/30 transition-all group hover:bg-zinc-900/50"
+                                >
+                                    <i data-lucide={s.icon} className="w-10 h-10 text-neon mb-6 opacity-80 group-hover:opacity-100 transition-opacity"></i>
+                                    <h3 className="text-xl font-bold text-white mb-2">{s.title}</h3>
+                                    <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // 6. Skills Section (Logos)
+        const Skills = () => {
+            return (
+                <section id="skills" className="py-32 bg-black/50 relative z-10">
+                    <div className="max-w-7xl mx-auto px-6 md:px-20">
+                        <h2 className="text-sm font-mono text-neon mb-16 tracking-widest text-center">02 / ARSENAL</h2>
+
+                        <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+                            {SKILLS_LOGOS.map((skill, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    transition={{ type: "spring", delay: i * 0.05 }}
+                                    viewport={{ once: true }}
+                                    whileHover={{ scale: 1.2, rotate: 10, filter: "brightness(1.5)" }}
+                                    className="group flex flex-col items-center gap-4 cursor-pointer"
+                                >
+                                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-neon group-hover:shadow-[0_0_30px_rgba(0,255,106,0.3)] transition-all duration-300">
+                                        <img src={skill.icon} alt={skill.name} className="w-1/2 h-1/2 grayscale group-hover:grayscale-0 transition-all duration-300" />
+                                    </div>
+                                    <span className="text-xs text-gray-500 font-mono group-hover:text-neon">{skill.name}</span>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )
+        };
+
+        // 7. Projects Section (Tilt Cards & Covers)
+        const Projects = () => {
+            const projects = [
+                {
+                    title: "Honsymp",
+                    desc: "Academic symposium & event platform with modern UI / UX.",
+                    link: "https://honsymp.vercel.app/",
+                    tags: ["Next.js", "Tailwind"],
+                    gradient: "from-blue-900 via-black to-black"
+                },
+                {
+                    title: "Monitub",
+                    desc: "Real-time antidrug monitoring and prevention system.",
+                    link: "https://monitub.netlify.app/",
+                    tags: ["React", "API"],
+                    gradient: "from-red-900 via-black to-black"
+                },
+                {
+                    title: "College Institute Platform",
+                    desc: "Advanced academic management portal architecture with high availability systems.",
+                    link: "#",
+                    tags: ["Architecture", "System Design"],
+                    status: "UNDER CONSTRUCTION",
+                    gradient: "from-emerald-900 via-black to-black"
+                },
+                {
+                    title: "Women Safety Guardian",
+                    desc: "IoT-integrated real-time distress response protocol with geolocation tracking.",
+                    link: "#",
+                    tags: ["IoT", "Security"],
+                    status: "UNDER CONSTRUCTION",
+                    gradient: "from-purple-900 via-black to-black"
+                },
+            ];
+
+            return (
+                <section id="projects" className="py-32 px-6 md:px-12 max-w-7xl mx-auto relative z-10">
+                    <h2 className="text-sm font-mono text-neon mb-16 tracking-widest">03 / SELECTED WORKS</h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+                        {projects.map((p, i) => (
+                            <TiltCard key={i} p={p} index={i} />
+                        ))}
+                    </div>
+                </section>
+            )
+        };
+
+        const TiltCard = ({ p, index }) => {
+            const x = useMotionValue(0);
+            const y = useMotionValue(0);
+            const rotateX = useTransform(y, [-100, 100], [5, -5]);
+            const rotateY = useTransform(x, [-100, 100], [-5, 5]);
+
+            return (
+                <motion.a
+                    href={p.link}
+                    target={p.link !== "#" ? "_blank" : "_self"}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    style={{ rotateX, rotateY, perspective: 1000 }}
+                    onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        x.set(e.clientX - rect.left - rect.width / 2);
+                        y.set(e.clientY - rect.top - rect.height / 2);
+                    }}
+                    onMouseLeave={() => {
+                        x.set(0); y.set(0);
+                    }}
+                    className="block group relative h-[500px] w-full rounded-xl bg-neutral-900 border border-white/5 overflow-hidden hover:border-neon/50 transition-all duration-500 shadow-2xl"
+                >
+                    {/* Cover Image/Gradient Area */}
+                    <div className={`absolute top-0 left-0 w-full h-3/5 bg-gradient-to-br ${p.gradient} opacity-50 group-hover:opacity-80 transition-opacity duration-500`}>
+                        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)', backgroundSize: '20px 20px' }}></div>
+                        {/* Status Badge */}
+                        {p.status && (
+                            <div className="absolute top-4 right-4 bg-orange-500/10 border border-orange-500/50 text-orange-500 text-[10px] px-3 py-1 rounded-full font-mono animate-pulse">
+                                {p.status}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="absolute top-[60%] left-0 w-full h-[40%] bg-black/80 backdrop-blur-md border-t border-white/10 p-8 flex flex-col justify-between group-hover:bg-zinc-900/90 transition-colors">
+                        <div>
+                            <div className="flex gap-2 mb-3">
+                                {p.tags.map(t => <span key={t} className="text-[10px] border border-white/10 bg-white/5 px-2 py-1 rounded text-gray-400 uppercase tracking-wider">{t}</span>)}
+                            </div>
+                            <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-neon transition-colors group-hover:translate-x-2 duration-300">{p.title}</h3>
+                            <p className="text-gray-400 text-sm line-clamp-2">{p.desc}</p>
+                        </div>
+                        <div className="flex justify-between items-center mt-4">
+                            <span className="text-xs text-gray-600 font-mono group-hover:text-white transition-colors">View Deployment</span>
+                            <i data-lucide="arrow-up-right" className="text-white w-5 h-5 group-hover:text-neon group-hover:rotate-45 transition-all duration-300"></i>
+                        </div>
+                    </div>
+                </motion.a>
+            )
+        };
+
+        // 7.5 Philosophy Section (New)
+        const Philosophy = () => {
+            return (
+                <section className="py-24 relative overflow-hidden flex items-center justify-center border-t border-white/5 bg-neutral-900/20">
+                    <div className="text-center space-y-4 px-6">
+                        <p className="text-neon font-mono text-xs tracking-[0.3em] uppercase opacity-70">Philosophy</p>
+                        <h2 className="text-3xl md:text-6xl font-sans font-black uppercase tracking-tighter text-white transition-colors duration-500 hover:text-neon cursor-default">
+                            "Passion defines the Craft."
+                        </h2>
+                    </div>
+                </section>
+            )
+        };
+
+        // 8. Footer
+        const Footer = () => {
+            return (
+                <footer id="contact" className="py-20 border-t border-white/10 bg-black text-center relative overflow-hidden z-10">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-neon/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+                    <h2 className="text-5xl md:text-8xl font-bold tracking-tighter text-white/10 hover:text-white/30 transition-colors uppercase cursor-default">
+                        Get In Touch
+                    </h2>
+
+                    <div className="mt-12 flex justify-center gap-8">
+                        <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-neon hover:border-neon hover:text-black transition-all" href="mailto:mmrakeshkumar13@gmail.com">
+                            <i data-lucide="mail"></i>
+                        </MagneticButton>
+                        <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#0077b5] hover:border-[#0077b5] hover:text-white transition-all" href="https://www.linkedin.com/in/rakesh-kumar-m-m-694634346/">
+                            <i data-lucide="linkedin"></i>
+                        </MagneticButton>
+                        <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white transition-all" href="https://www.instagram.com/rxkeshhhhh/?hl=en">
+                            <i data-lucide="instagram"></i>
+                        </MagneticButton>
+                    </div>
+
+                    <p className="mt-12 text-gray-500 text-sm md:text-base font-mono tracking-wider">
+                        DESIGNED & BUILT BY <span className="text-neon font-medium">RAKESH KUMAR M M</span> <br />
+                        <span className="text-white/20">© 2026</span>
+                    </p>
+                </footer>
+            )
+        };
+
+        // Helper: Magnetic Button
+        const MagneticButton = ({ children, className, onClick, href }) => {
+            const ref = useRef(null);
+            const x = useMotionValue(0);
+            const y = useMotionValue(0);
+
+            const handleMouseMove = (e) => {
+                const { left, top, width, height } = ref.current.getBoundingClientRect();
+                const centerX = left + width / 2;
+                const centerY = top + height / 2;
+                x.set((e.clientX - centerX) * 0.3);
+                y.set((e.clientY - centerY) * 0.3);
+            };
+
+            const handleMouseLeave = () => {
+                x.set(0);
+                y.set(0);
+            };
+
+            const Wrapper = href ? 'a' : 'button';
+
+            return (
+                <motion.div style={{ x, y }} className="inline-block">
+                    <Wrapper
+                        ref={ref}
+                        href={href}
+                        onClick={onClick}
+                        onMouseMove={handleMouseMove}
+                        onMouseLeave={handleMouseLeave}
+                        className={`relative overflow-hidden group ${className}`}
+                    >
+                        {children}
+                    </Wrapper>
+                </motion.div>
+            );
+        };
+
+        // Main App
+        const App = () => {
+            const [showIntro, setShowIntro] = useState(true);
+
+            useEffect(() => {
+                window.lucide.createIcons();
+            });
+
+            return (
+                <main className="bg-black text-white min-h-screen relative selection:bg-neon selection:text-black font-sans">
+                    <Background />
+                    <AnimatePresence>
+                        {showIntro && <Intro onComplete={() => setShowIntro(false)} />}
+                    </AnimatePresence>
+
+                    {!showIntro && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1 }}
+                        >
+                            <Cursor />
+                            <Navbar />
+                            <Hero />
+                            <About />
+                            <Services />
+                            <Skills />
+                            <Projects />
+                            <Philosophy />
+                            <Footer />
+                        </motion.div>
+                    )}
+                </main>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
