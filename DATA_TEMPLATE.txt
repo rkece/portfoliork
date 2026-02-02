@@ -1,0 +1,62 @@
+# Portfolio Expansion Data Template
+
+To take your portfolio to the next level (Luxury/Professional), we need to fill in these two key sections.
+Please paste the details below in the chat (or edit this file).
+
+## 1. 🎓 Professional Timeline (Education & Experience)
+This creates a vertical "Journey" line. List in reverse chronological order.
+
+**Item 1 (Most Recent)**
+- Type: (e.g., Job / Internship / Education)
+- Role/Degree: 
+- Organization/College: 
+- Year: (e.g., 2023 - Present)
+- 1-Line Description: 
+
+**Item 2**
+- Type: 
+- Role/Degree: 
+- Organization/College: 
+- Year: 
+- 1-Line Description: 
+
+**Item 3**
+- Type: 
+- Role/Degree: 
+- Organization/College: 
+- Year: 
+- 1-Line Description: 
+
+---
+
+## 2. 🏆 Certifications & Achievements
+This adds a "Trophy Case" grid.
+
+**Cert 1**
+- Name: (e.g., AWS Certified Cloud Practitioner)
+- Issuer: (e.g., Amazon)
+- Year: 
+
+**Cert 2**
+- Name: 
+- Issuer: 
+- Year: 
+
+**Cert 3**
+- Name: 
+- Issuer: 
+- Year: 
+
+---
+
+## 3. 📄 Resume / CV
+- Do you have a direct link to your Resume PDF? 
+- (Link): 
+
+---
+
+## 4. 📢 Testimonials (Optional)
+Social proof adds massive value.
+- Name:
+- Role:
+- Quote:
