@@ -334,6 +334,7 @@
             { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
             { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" },
             { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+            { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" },
         ];
 
         // --- Components ---
@@ -695,7 +696,14 @@
                                     className="group flex flex-col items-center gap-4 cursor-pointer"
                                 >
                                     <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-neon group-hover:shadow-[0_0_30px_rgba(0,255,106,0.3)] transition-all duration-300">
-                                        <img src={skill.icon} alt={skill.name} className="w-1/2 h-1/2 grayscale group-hover:grayscale-0 transition-all duration-300" />
+                                        <img
+                                            src={skill.icon}
+                                            alt={skill.name}
+                                            className={`w-1/2 h-1/2 transition-all duration-300 ${skill.name === 'GitHub'
+                                                    ? 'grayscale invert group-hover:grayscale-0 group-hover:invert'
+                                                    : 'grayscale group-hover:grayscale-0'
+                                                }`}
+                                        />
                                     </div>
                                     <span className="text-xs text-gray-500 font-mono group-hover:text-neon">{skill.name}</span>
                                 </motion.div>
@@ -709,6 +717,13 @@
         // 7. Projects Section (Tilt Cards & Covers)
         const Projects = () => {
             const projects = [
+                {
+                    title: "Autonomous Surveillance Rover",
+                    desc: "Advanced autonomous surveillance system with real-time monitoring and intelligent navigation capabilities.",
+                    link: "https://roverosx.vercel.app/",
+                    tags: ["MERN", "IoT", "Automation"],
+                    gradient: "from-cyan-900 via-black to-black"
+                },
                 {
                     title: "Honsymp",
                     desc: "Academic symposium & event platform with modern UI / UX.",
