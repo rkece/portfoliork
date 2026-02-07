@@ -340,11 +340,161 @@
         // --- Components ---
 
         // 1. Dynamic Background Pattern
-        // 1. Simple Black Background
+        // 1. Grid Background (Matching Screenshot)
         const Background = () => {
+            const mouseX = useMotionValue(0);
+            const mouseY = useMotionValue(0);
+
+            useEffect(() => {
+                const handleMove = (e) => {
+                    mouseX.set(e.clientX);
+                    mouseY.set(e.clientY);
+                };
+                window.addEventListener('mousemove', handleMove);
+                return () => window.removeEventListener('mousemove', handleMove);
+            }, []);
+
             return (
-                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black" />
+                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black">
+                    {/* Grid Pattern */}
+                    <div
+                        className="absolute inset-0 opacity-[0.2]"
+                        style={{
+                            backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
+                            backgroundSize: '60px 60px', /* Matched grid cell size */
+                            maskImage: 'radial-gradient(circle at 50% 50%, black 60%, transparent 100%)' /* Subtle vignette */
+                        }}
+                    />
+
+                    {/* Mouse Spotlight (Green Glow) */}
+                    <motion.div
+                        className="absolute w-[600px] h-[600px] bg-neon/5 rounded-full blur-[100px]"
+                        style={{
+                            left: mouseX,
+                            top: mouseY,
+                            translateX: '-50%',
+                            translateY: '-50%',
+                        }}
+                    />
+                </div>
             );
+        };
+
+        const NetworkEffect = () => {
+            const [nodes, setNodes] = useState([]);
+            const [lines, setLines] = useState([]);
+
+            // Generate random floating nodes
+            useEffect(() => {
+                const nodeCount = 25; // As per guide
+                const initialNodes = [];
+                for (let i = 0; i < nodeCount; i++) {
+                    initialNodes.push({
+                        id: i,
+                        x: Math.random() * 100,
+                        y: Math.random() * 100,
+                        // Random velocities for floating effect
+                        vx: (Math.random() - 0.5) * 0.15,
+                        vy: (Math.random() - 0.5) * 0.15,
+                    });
+                }
+                setNodes(initialNodes);
+            }, []);
+
+            // Animation Loop for floating movement and line connections
+            useAnimationLoop((time) => {
+                setNodes(prevNodes => prevNodes.map(node => {
+                    let newX = node.x + node.vx;
+                    let newY = node.y + node.vy;
+
+                    // Bounce off edges
+                    if (newX <= 0 || newX >= 100) node.vx *= -1;
+                    if (newY <= 0 || newY >= 100) node.vy *= -1;
+
+                    return { ...node, x: newX, y: newY };
+                }));
+
+                setLines(calculateLines(nodes));
+            });
+
+            // Calculate connections
+            const calculateLines = (currentNodes) => {
+                const newLines = [];
+                const maxDistance = 20; // 20% of screen width connection range
+
+                for (let i = 0; i < currentNodes.length; i++) {
+                    for (let j = i + 1; j < currentNodes.length; j++) {
+                        const node1 = currentNodes[i];
+                        const node2 = currentNodes[j];
+
+                        const dx = node1.x - node2.x;
+                        const dy = node1.y - node2.y;
+                        // Approximate aspect ratio correction (assuming 16:9 roughly, or just use raw %)
+                        const aspectCorrection = 1.77;
+                        const dist = Math.sqrt(dx * dx + (dy * dy * aspectCorrection));
+
+                        if (dist < maxDistance) {
+                            newLines.push({
+                                id: `${node1.id}-${node2.id}`,
+                                x1: node1.x, y1: node1.y,
+                                x2: node2.x, y2: node2.y,
+                                opacity: 1 - (dist / maxDistance) // Fade out as they get further
+                            });
+                        }
+                    }
+                }
+                return newLines;
+            };
+
+            return (
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                    {/* Lines */}
+                    {lines.map(line => {
+                        const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * 180 / Math.PI;
+                        const length = Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2));
+                        return (
+                            <div
+                                key={line.id}
+                                className="absolute h-[1px] bg-neon origin-left"
+                                style={{
+                                    left: `${line.x1}%`,
+                                    top: `${line.y1}%`,
+                                    width: `${length}%`,
+                                    transform: `rotate(${angle}deg)`,
+                                    opacity: line.opacity * 0.4
+                                }}
+                            />
+                        );
+                    })}
+
+                    {/* Nodes */}
+                    {nodes.map(node => (
+                        <div
+                            key={node.id}
+                            className="absolute w-1.5 h-1.5 bg-neon rounded-full"
+                            style={{
+                                left: `${node.x}%`,
+                                top: `${node.y}%`,
+                                transform: 'translate(-50%, -50%)',
+                                boxShadow: `0 0 10px #00ff00`
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        };
+
+        // Helper hook for animation frame
+        const useAnimationLoop = (callback) => {
+            const requestRef = useRef();
+            const animate = (time) => {
+                callback(time);
+                requestRef.current = requestAnimationFrame(animate);
+            };
+            useEffect(() => {
+                requestRef.current = requestAnimationFrame(animate);
+                return () => cancelAnimationFrame(requestRef.current);
+            }, [callback]); // Careful with dependency here
         };
 
         // 2. Custom Cursor (Enhanced)
