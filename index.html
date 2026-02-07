@@ -340,43 +340,10 @@
         // --- Components ---
 
         // 1. Dynamic Background Pattern
+        // 1. Simple Black Background
         const Background = () => {
-            const mouseX = useMotionValue(0);
-            const mouseY = useMotionValue(0);
-
-            useEffect(() => {
-                const handleMove = (e) => {
-                    mouseX.set(e.clientX);
-                    mouseY.set(e.clientY);
-                };
-                window.addEventListener('mousemove', handleMove);
-                return () => window.removeEventListener('mousemove', handleMove);
-            }, []);
-
             return (
-                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,#0a0a0a,transparent)]" />
-                    {/* Grid Pattern */}
-                    <div
-                        className="absolute inset-0 opacity-20"
-                        style={{
-                            backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
-                            backgroundSize: '40px 40px',
-                            maskImage: 'radial-gradient(circle at center, black, transparent 80%)'
-                        }}
-                    />
-
-                    {/* Following Spotlight */}
-                    <motion.div
-                        className="absolute w-[600px] h-[600px] bg-neon/5 rounded-full blur-[100px]"
-                        style={{
-                            left: mouseX,
-                            top: mouseY,
-                            translateX: '-50%',
-                            translateY: '-50%'
-                        }}
-                    />
-                </div>
+                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black" />
             );
         };
 
@@ -633,7 +600,7 @@
                                 className="relative z-10 p-2 border border-neon/20 bg-black/50 backdrop-blur-sm max-w-xs md:max-w-sm w-full"
                             >
                                 <div className="aspect-[3/4] bg-neutral-900 w-full overflow-hidden relative">
-                                    <img src="./profile.png" alt="Rakesh Kumar M M" className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0" />
+                                    <img src="rk.jpg" alt="Rakesh Kumar M M" className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0" />
                                     <div className="absolute inset-0 bg-neon/10 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 </div>
                             </motion.div>
@@ -641,6 +608,7 @@
                             <div className="absolute -top-4 -right-4 w-16 h-16 md:w-24 md:h-24 border-t-2 border-r-2 border-neon/50 opacity-50 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform"></div>
                             <div className="absolute -bottom-4 -left-4 w-16 h-16 md:w-24 md:h-24 border-b-2 border-l-2 border-neon/50 opacity-50 group-hover:-translate-x-2 group-hover:translate-y-2 transition-transform"></div>
                         </div>
+
                     </div>
                 </section>
             )
@@ -700,8 +668,8 @@
                                             src={skill.icon}
                                             alt={skill.name}
                                             className={`w-1/2 h-1/2 transition-all duration-300 ${skill.name === 'GitHub'
-                                                    ? 'grayscale invert group-hover:grayscale-0 group-hover:invert'
-                                                    : 'grayscale group-hover:grayscale-0'
+                                                ? 'grayscale invert group-hover:grayscale-0 group-hover:invert'
+                                                : 'grayscale group-hover:grayscale-0'
                                                 }`}
                                         />
                                     </div>
