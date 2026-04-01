@@ -53,7 +53,7 @@ Replace `https://rakeshkumar.dev/` with your actual domain in:
 - [ ] Maintain consistent branding across all platforms
 
 ### Performance
-- [ ] Optimize images (compress profile.png)
+- [ ] Optimize images (compress rk.jpg)
 - [ ] Enable HTTPS (SSL certificate)
 - [ ] Use CDN for faster loading
 - [ ] Minimize CSS/JS files

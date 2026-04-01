@@ -19,9 +19,9 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description"
-        content="Rakesh Kumar M M - Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Network Security, and IoT Solutions. ECE Student at R.M.K. Engineering College building scalable web applications." />
+        content="Rakesh Kumar M M - Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Application Security, and IoT Solutions. ECE Student at R.M.K. Engineering College building scalable web applications." />
     <meta name="keywords"
-        content="Rakesh Kumar M M, Full Stack Developer, MERN Stack Developer, Software Engineer, Web Developer, React Developer, Node.js Developer, JavaScript Developer, ECE Student, R.M.K. Engineering College, Network Security, IoT Developer, Firebase Developer, Portfolio, Software Craftsman, Frontend Developer, Backend Developer, MongoDB, Express.js, React.js, HTML5, CSS3, Git, Modern Web Development, Responsive Design, UI/UX Developer, Tamil Nadu Developer, Chennai Developer, Indian Developer" />
+        content="Rakesh Kumar M M, Full Stack Developer, MERN Stack Developer, Software Engineer, Web Developer, React Developer, Node.js Developer, JavaScript Developer, ECE Student, R.M.K. Engineering College, Application Security, IoT Developer, Firebase Developer, Portfolio, Software Craftsman, Frontend Developer, Backend Developer, MongoDB, Express.js, React.js, HTML5, CSS3, Git, Modern Web Development, Responsive Design, UI/UX Developer, Tamil Nadu Developer, Chennai Developer, Indian Developer" />
     <meta name="author" content="Rakesh Kumar M M" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -31,26 +31,26 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rakeshkumar.dev/" />
+    <meta property="og:url" content="https://rakeshkumarmm.in/" />
     <meta property="og:title" content="Rakesh Kumar M M | Modern Software Craftsman & Full Stack Developer" />
     <meta property="og:description"
-        content="Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Network Security, and IoT Solutions. Building scalable, immersive web applications with precision and passion." />
-    <meta property="og:image" content="https://rakeshkumar.dev/profile.png" />
+        content="Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Application Security, and IoT Solutions. Building scalable, immersive web applications with precision and passion." />
+    <meta property="og:image" content="https://rakeshkumarmm.in/rk.jpg" />
     <meta property="og:site_name" content="Rakesh Kumar M M Portfolio" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://rakeshkumar.dev/" />
+    <meta name="twitter:url" content="https://rakeshkumarmm.in/" />
     <meta name="twitter:title" content="Rakesh Kumar M M | Modern Software Craftsman & Full Stack Developer" />
     <meta name="twitter:description"
-        content="Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Network Security, and IoT Solutions." />
-    <meta name="twitter:image" content="https://rakeshkumar.dev/profile.png" />
+        content="Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Application Security, and IoT Solutions." />
+    <meta name="twitter:image" content="https://rakeshkumarmm.in/rk.jpg" />
     <meta name="twitter:creator" content="@rxkeshhhhh" />
 
     <!-- Additional SEO -->
     <meta name="theme-color" content="#00FF6A" />
-    <link rel="canonical" href="https://rakeshkumar.dev/" />
+    <link rel="canonical" href="https://rakeshkumarmm.in/" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -190,10 +190,10 @@
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "Rakesh Kumar M M",
-        "url": "https://rakeshkumar.dev",
-        "image": "https://rakeshkumar.dev/profile.png",
+        "url": "https://rakeshkumarmm.in",
+        "image": "https://rakeshkumarmm.in/rk.jpg",
         "jobTitle": "Full Stack Developer & Software Engineer",
-        "description": "Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Network Security, and IoT Solutions",
+        "description": "Modern Software Craftsman specializing in Full Stack Development, MERN Stack, Application Security, and IoT Solutions",
         "alumniOf": {
             "@type": "EducationalOrganization",
             "name": "R.M.K. Engineering College",
@@ -212,7 +212,7 @@
             "Node.js",
             "MongoDB",
             "Express.js",
-            "Network Security",
+            "Application Security",
             "IoT Development",
             "Firebase",
             "HTML5",
@@ -235,7 +235,7 @@
                 "@type": "Country",
                 "name": "India"
             },
-            "skills": "Full Stack Development, MERN Stack, Network Security, IoT, Firebase, React, Node.js, MongoDB, Express.js"
+            "skills": "Full Stack Development, MERN Stack, Application Security, IoT, Firebase, React, Node.js, MongoDB, Express.js"
         }
     }
     </script>
@@ -334,11 +334,13 @@
             { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
             { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" },
             { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+            { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" },
         ];
 
         // --- Components ---
 
         // 1. Dynamic Background Pattern
+        // 1. Grid Background (Matching Screenshot)
         const Background = () => {
             const mouseX = useMotionValue(0);
             const mouseY = useMotionValue(0);
@@ -353,30 +355,146 @@
             }, []);
 
             return (
-                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,#0a0a0a,transparent)]" />
+                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black">
                     {/* Grid Pattern */}
                     <div
-                        className="absolute inset-0 opacity-20"
+                        className="absolute inset-0 opacity-[0.2]"
                         style={{
                             backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
-                            backgroundSize: '40px 40px',
-                            maskImage: 'radial-gradient(circle at center, black, transparent 80%)'
+                            backgroundSize: '60px 60px', /* Matched grid cell size */
+                            maskImage: 'radial-gradient(circle at 50% 50%, black 60%, transparent 100%)' /* Subtle vignette */
                         }}
                     />
 
-                    {/* Following Spotlight */}
+                    {/* Mouse Spotlight (Green Glow) */}
                     <motion.div
                         className="absolute w-[600px] h-[600px] bg-neon/5 rounded-full blur-[100px]"
                         style={{
                             left: mouseX,
                             top: mouseY,
                             translateX: '-50%',
-                            translateY: '-50%'
+                            translateY: '-50%',
                         }}
                     />
                 </div>
             );
+        };
+
+        const NetworkEffect = () => {
+            const [nodes, setNodes] = useState([]);
+            const [lines, setLines] = useState([]);
+
+            // Generate random floating nodes
+            useEffect(() => {
+                const nodeCount = 25; // As per guide
+                const initialNodes = [];
+                for (let i = 0; i < nodeCount; i++) {
+                    initialNodes.push({
+                        id: i,
+                        x: Math.random() * 100,
+                        y: Math.random() * 100,
+                        // Random velocities for floating effect
+                        vx: (Math.random() - 0.5) * 0.15,
+                        vy: (Math.random() - 0.5) * 0.15,
+                    });
+                }
+                setNodes(initialNodes);
+            }, []);
+
+            // Animation Loop for floating movement and line connections
+            useAnimationLoop((time) => {
+                setNodes(prevNodes => prevNodes.map(node => {
+                    let newX = node.x + node.vx;
+                    let newY = node.y + node.vy;
+
+                    // Bounce off edges
+                    if (newX <= 0 || newX >= 100) node.vx *= -1;
+                    if (newY <= 0 || newY >= 100) node.vy *= -1;
+
+                    return { ...node, x: newX, y: newY };
+                }));
+
+                setLines(calculateLines(nodes));
+            });
+
+            // Calculate connections
+            const calculateLines = (currentNodes) => {
+                const newLines = [];
+                const maxDistance = 20; // 20% of screen width connection range
+
+                for (let i = 0; i < currentNodes.length; i++) {
+                    for (let j = i + 1; j < currentNodes.length; j++) {
+                        const node1 = currentNodes[i];
+                        const node2 = currentNodes[j];
+
+                        const dx = node1.x - node2.x;
+                        const dy = node1.y - node2.y;
+                        // Approximate aspect ratio correction (assuming 16:9 roughly, or just use raw %)
+                        const aspectCorrection = 1.77;
+                        const dist = Math.sqrt(dx * dx + (dy * dy * aspectCorrection));
+
+                        if (dist < maxDistance) {
+                            newLines.push({
+                                id: `${node1.id}-${node2.id}`,
+                                x1: node1.x, y1: node1.y,
+                                x2: node2.x, y2: node2.y,
+                                opacity: 1 - (dist / maxDistance) // Fade out as they get further
+                            });
+                        }
+                    }
+                }
+                return newLines;
+            };
+
+            return (
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                    {/* Lines */}
+                    {lines.map(line => {
+                        const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * 180 / Math.PI;
+                        const length = Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2));
+                        return (
+                            <div
+                                key={line.id}
+                                className="absolute h-[1px] bg-neon origin-left"
+                                style={{
+                                    left: `${line.x1}%`,
+                                    top: `${line.y1}%`,
+                                    width: `${length}%`,
+                                    transform: `rotate(${angle}deg)`,
+                                    opacity: line.opacity * 0.4
+                                }}
+                            />
+                        );
+                    })}
+
+                    {/* Nodes */}
+                    {nodes.map(node => (
+                        <div
+                            key={node.id}
+                            className="absolute w-1.5 h-1.5 bg-neon rounded-full"
+                            style={{
+                                left: `${node.x}%`,
+                                top: `${node.y}%`,
+                                transform: 'translate(-50%, -50%)',
+                                boxShadow: `0 0 10px #00ff00`
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        };
+
+        // Helper hook for animation frame
+        const useAnimationLoop = (callback) => {
+            const requestRef = useRef();
+            const animate = (time) => {
+                callback(time);
+                requestRef.current = requestAnimationFrame(animate);
+            };
+            useEffect(() => {
+                requestRef.current = requestAnimationFrame(animate);
+                return () => cancelAnimationFrame(requestRef.current);
+            }, [callback]); // Careful with dependency here
         };
 
         // 2. Custom Cursor (Enhanced)
@@ -612,7 +730,7 @@
                             <p className="text-lg md:text-2xl leading-relaxed text-gray-300 font-light text-left">
                                 I am <span className="text-white font-medium">Rakesh Kumar M M</span>, a <span className="text-neon">Modern Software Craftsman</span>. I create scalable digital systems with precision.
                                 <br /><br />
-                                Currently pursuing <strong>Electronics and Communication Engineering</strong> at <strong>R.M.K. Engineering College</strong> (2024-2028) with a <span className="text-neon">8.33 CGPA</span>. My work bridges the gap between <span className="text-neon italic">Fullstack Development</span> and <span className="text-neon italic">Network Security</span>.
+                                Currently pursuing <strong>Electronics and Communication Engineering</strong> at <strong>R.M.K. Engineering College</strong> (2024-2028) with a <span className="text-neon">8.33 CGPA</span>. My work bridges the gap between <span className="text-neon italic">Fullstack Development</span> and <span className="text-neon italic">Application Security</span>.
                             </p>
                             <div className="mt-8 grid grid-cols-2 gap-4">
                                 <div className="border border-white/10 p-4 rounded hover:border-neon/30 transition-colors">
@@ -632,7 +750,7 @@
                                 className="relative z-10 p-2 border border-neon/20 bg-black/50 backdrop-blur-sm max-w-xs md:max-w-sm w-full"
                             >
                                 <div className="aspect-[3/4] bg-neutral-900 w-full overflow-hidden relative">
-                                    <img src="./profile.png" alt="Rakesh Kumar M M" className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0" />
+                                    <img src="rk.jpg" alt="Rakesh Kumar M M" className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-all duration-700 grayscale group-hover:grayscale-0" />
                                     <div className="absolute inset-0 bg-neon/10 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 </div>
                             </motion.div>
@@ -640,6 +758,7 @@
                             <div className="absolute -top-4 -right-4 w-16 h-16 md:w-24 md:h-24 border-t-2 border-r-2 border-neon/50 opacity-50 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform"></div>
                             <div className="absolute -bottom-4 -left-4 w-16 h-16 md:w-24 md:h-24 border-b-2 border-l-2 border-neon/50 opacity-50 group-hover:-translate-x-2 group-hover:translate-y-2 transition-transform"></div>
                         </div>
+
                     </div>
                 </section>
             )
@@ -649,7 +768,7 @@
         const Services = () => {
             const services = [
                 { title: "Fullstack Architecture", icon: "layers", desc: "Building end-to-end scalable web applications using MERN & Firebase stack." },
-                { title: "Network Security", icon: "shield-check", desc: "Implementing robust security protocols and real-time monitoring systems." },
+                { title: "Application Security", icon: "shield-alert", desc: "Securing web applications with advanced authentication, authorization, and vulnerability protection." },
                 { title: "UI/UX Engineering", icon: "palette", desc: "Crafting immersive, motion-rich user experiences with modern tools." }
             ];
 
@@ -695,7 +814,14 @@
                                     className="group flex flex-col items-center gap-4 cursor-pointer"
                                 >
                                     <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-neon group-hover:shadow-[0_0_30px_rgba(0,255,106,0.3)] transition-all duration-300">
-                                        <img src={skill.icon} alt={skill.name} className="w-1/2 h-1/2 grayscale group-hover:grayscale-0 transition-all duration-300" />
+                                        <img
+                                            src={skill.icon}
+                                            alt={skill.name}
+                                            className={`w-1/2 h-1/2 transition-all duration-300 ${skill.name === 'GitHub'
+                                                ? 'grayscale invert group-hover:grayscale-0 group-hover:invert'
+                                                : 'grayscale group-hover:grayscale-0'
+                                                }`}
+                                        />
                                     </div>
                                     <span className="text-xs text-gray-500 font-mono group-hover:text-neon">{skill.name}</span>
                                 </motion.div>
@@ -710,6 +836,13 @@
         const Projects = () => {
             const projects = [
                 {
+                    title: "Autonomous Surveillance Rover",
+                    desc: "Advanced autonomous surveillance system with real-time monitoring and intelligent navigation capabilities.",
+                    link: "https://roverosx.vercel.app/",
+                    tags: ["MERN", "IoT", "Automation"],
+                    gradient: "from-cyan-900 via-black to-black"
+                },
+                {
                     title: "Honsymp",
                     desc: "Academic symposium & event platform with modern UI / UX.",
                     link: "https://honsymp.vercel.app/",
@@ -717,10 +850,10 @@
                     gradient: "from-blue-900 via-black to-black"
                 },
                 {
-                    title: "Monitub",
+                    title: "MonitorHub",
                     desc: "Real-time antidrug monitoring and prevention system.",
-                    link: "https://monitub.netlify.app/",
-                    tags: ["React", "API"],
+                    link: "https://monitorhub-iota.vercel.app/",
+                    tags: ["MERN", "API"],
                     gradient: "from-red-900 via-black to-black"
                 },
                 {
@@ -833,14 +966,21 @@
                     </h2>
 
                     <div className="mt-12 flex justify-center gap-8">
+                        {/* Email */}
                         <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-neon hover:border-neon hover:text-black transition-all" href="mailto:mmrakeshkumar13@gmail.com">
-                            <i data-lucide="mail"></i>
+                            <i data-lucide="mail" className="w-5 h-5"></i>
                         </MagneticButton>
-                        <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#0077b5] hover:border-[#0077b5] hover:text-white transition-all" href="https://www.linkedin.com/in/rakesh-kumar-m-m-694634346/">
-                            <i data-lucide="linkedin"></i>
+                        {/* LinkedIn */}
+                        <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#0077b5] hover:border-[#0077b5] transition-all" href="https://www.linkedin.com/in/rakesh-kumar-m-m-694634346/" target="_blank" rel="noopener noreferrer">
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
                         </MagneticButton>
-                        <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#E1306C] hover:border-[#E1306C] hover:text-white transition-all" href="https://www.instagram.com/rxkeshhhhh/?hl=en">
-                            <i data-lucide="instagram"></i>
+                        {/* Instagram */}
+                        <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#E1306C] hover:border-[#E1306C] transition-all" href="https://www.instagram.com/rxkeshhhhh/?hl=en" target="_blank" rel="noopener noreferrer">
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                            </svg>
                         </MagneticButton>
                     </div>
 
@@ -853,7 +993,7 @@
         };
 
         // Helper: Magnetic Button
-        const MagneticButton = ({ children, className, onClick, href }) => {
+        const MagneticButton = ({ children, className, onClick, href, target, rel }) => {
             const ref = useRef(null);
             const x = useMotionValue(0);
             const y = useMotionValue(0);
@@ -878,6 +1018,8 @@
                     <Wrapper
                         ref={ref}
                         href={href}
+                        target={target}
+                        rel={rel}
                         onClick={onClick}
                         onMouseMove={handleMouseMove}
                         onMouseLeave={handleMouseLeave}

@@ -6,7 +6,7 @@
 
     <!-- Homepage -->
     <url>
-        <loc>https://rakeshkumar.dev/</loc>
+        <loc>https://rakeshkumarmm.in/</loc>
         <lastmod>2026-02-02</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
     <!-- About Section -->
     <url>
-        <loc>https://rakeshkumar.dev/#about</loc>
+        <loc>https://rakeshkumarmm.in/#about</loc>
         <lastmod>2026-02-02</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -22,7 +22,7 @@
 
     <!-- Skills Section -->
     <url>
-        <loc>https://rakeshkumar.dev/#skills</loc>
+        <loc>https://rakeshkumarmm.in/#skills</loc>
         <lastmod>2026-02-02</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -30,7 +30,7 @@
 
     <!-- Projects Section -->
     <url>
-        <loc>https://rakeshkumar.dev/#projects</loc>
+        <loc>https://rakeshkumarmm.in/#projects</loc>
         <lastmod>2026-02-02</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
@@ -38,7 +38,7 @@
 
     <!-- Contact Section -->
     <url>
-        <loc>https://rakeshkumar.dev/#contact</loc>
+        <loc>https://rakeshkumarmm.in/#contact</loc>
         <lastmod>2026-02-02</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -47,7 +47,7 @@
     <!-- Add more URLs here as you add pages to your portfolio -->
     <!-- Example:
     <url>
-        <loc>https://rakeshkumar.dev/blog</loc>
+        <loc>https://rakeshkumarmm.in/blog</loc>
         <lastmod>2026-02-02</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -55,3 +55,5 @@
     -->
 
 </urlset>
+
+
