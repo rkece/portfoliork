@@ -514,13 +514,10 @@
             }, [callback]); // Careful with dependency here
         };
 
-        // 2. Custom Cursor with Neon Particle Trail
+        // 2. Custom Cursor
         const Cursor = () => {
             const mouseX = useMotionValue(-100);
             const mouseY = useMotionValue(-100);
-            const canvasRef = useRef(null);
-            const particlesRef = useRef([]);
-            const rafRef = useRef(null);
 
             const springConfig = { damping: 25, stiffness: 700 };
             const dotX = useSpring(mouseX, springConfig);
@@ -529,85 +526,20 @@
             const outlineY = useSpring(mouseY, { damping: 20, stiffness: 300 });
 
             useEffect(() => {
-                const canvas = canvasRef.current;
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-
-                // Resize canvas to full viewport
-                const resize = () => {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                };
-                resize();
-                window.addEventListener('resize', resize);
-
-                // Spawn particles on mouse move
-                const handleMove = (e) => {
+                const moveCursor = (e) => {
                     mouseX.set(e.clientX);
                     mouseY.set(e.clientY);
-                    // Add 2 particles per move for a denser trail
-                    for (let i = 0; i < 2; i++) {
-                        particlesRef.current.push({
-                            x: e.clientX + (Math.random() - 0.5) * 4,
-                            y: e.clientY + (Math.random() - 0.5) * 4,
-                            size: Math.random() * 4 + 2,
-                            alpha: 1,
-                            decay: Math.random() * 0.03 + 0.02,
-                        });
-                    }
                 };
-                window.addEventListener('mousemove', handleMove);
-
-                // Animation loop
-                const loop = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    particlesRef.current = particlesRef.current.filter(p => p.alpha > 0.01);
-
-                    particlesRef.current.forEach(p => {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-
-                        // Neon green glow
-                        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2);
-                        gradient.addColorStop(0, `rgba(0, 255, 106, ${p.alpha})`);
-                        gradient.addColorStop(1, `rgba(0, 255, 106, 0)`);
-                        ctx.fillStyle = gradient;
-
-                        ctx.shadowColor = '#00FF6A';
-                        ctx.shadowBlur = 8;
-                        ctx.fill();
-
-                        // Shrink and fade
-                        p.alpha -= p.decay;
-                        p.size *= 0.96;
-                    });
-
-                    rafRef.current = requestAnimationFrame(loop);
-                };
-                loop();
-
-                return () => {
-                    window.removeEventListener('mousemove', handleMove);
-                    window.removeEventListener('resize', resize);
-                    cancelAnimationFrame(rafRef.current);
-                };
+                window.addEventListener("mousemove", moveCursor);
+                return () => window.removeEventListener("mousemove", moveCursor);
             }, []);
 
             return (
                 <>
-                    {/* Trail canvas — below cursor dots */}
-                    <canvas
-                        ref={canvasRef}
-                        className="fixed inset-0 pointer-events-none z-[9997]"
-                        style={{ mixBlendMode: 'screen' }}
-                    />
-                    {/* Dot */}
                     <motion.div
                         className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-dot"
                         style={{ left: dotX, top: dotY, translateX: "-50%", translateY: "-50%" }}
                     />
-                    {/* Outline ring */}
                     <motion.div
                         className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-outline mix-blend-difference"
                         style={{ left: outlineX, top: outlineY, translateX: "-50%", translateY: "-50%" }}
@@ -615,7 +547,6 @@
                 </>
             );
         };
-
 
         // 3. Navigation
         const Navbar = () => {
@@ -1076,7 +1007,7 @@
                     <div className="mt-12 flex flex-wrap justify-center gap-4 md:gap-6 px-4">
                         {/* Email */}
                         <div className="relative group/tip">
-                            <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-neon hover:border-neon hover:text-black transition-all" href="mailto:mmrakeshkumar13@gmail.com">
+                            <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all" href="mailto:mmrakeshkumar13@gmail.com">
                                 <i data-lucide="mail" className="w-5 h-5"></i>
                             </MagneticButton>
                             <span className="absolute -top-9 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white text-[10px] font-mono px-2 py-1 rounded opacity-0 group-hover/tip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Email</span>
