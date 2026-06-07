@@ -172,12 +172,6 @@
     <style>
         /* CSS adjustments for mobile responsiveness */
         @media (hover: none) and (pointer: coarse) {
-
-            .custom-cursor-dot,
-            .custom-cursor-outline {
-                display: none !important;
-            }
-
             body {
                 cursor: auto !important;
             }
@@ -358,16 +352,27 @@
         // 1. Dynamic Background Pattern
         // 1. Grid Background (Matching Screenshot)
         const Background = () => {
-            const mouseX = useMotionValue(0);
-            const mouseY = useMotionValue(0);
+            const mouseX = useMotionValue(-1000);
+            const mouseY = useMotionValue(-1000);
 
             useEffect(() => {
                 const handleMove = (e) => {
-                    mouseX.set(e.clientX);
-                    mouseY.set(e.clientY);
+                    if (e.touches && e.touches.length > 0) {
+                        mouseX.set(e.touches[0].clientX);
+                        mouseY.set(e.touches[0].clientY);
+                    } else {
+                        mouseX.set(e.clientX);
+                        mouseY.set(e.clientY);
+                    }
                 };
                 window.addEventListener('mousemove', handleMove);
-                return () => window.removeEventListener('mousemove', handleMove);
+                window.addEventListener('touchmove', handleMove);
+                window.addEventListener('touchstart', handleMove);
+                return () => {
+                    window.removeEventListener('mousemove', handleMove);
+                    window.removeEventListener('touchmove', handleMove);
+                    window.removeEventListener('touchstart', handleMove);
+                };
             }, []);
 
             return (
@@ -517,6 +522,7 @@
         const Cursor = () => {
             const mouseX = useMotionValue(-100);
             const mouseY = useMotionValue(-100);
+            const [isVisible, setIsVisible] = useState(true);
 
             const springConfig = { damping: 25, stiffness: 700 };
             const dotX = useSpring(mouseX, springConfig);
@@ -525,16 +531,45 @@
             const outlineY = useSpring(mouseY, { damping: 20, stiffness: 300 });
 
             useEffect(() => {
+                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                if (isTouchDevice) {
+                    setIsVisible(false);
+                }
+
                 const moveCursor = (e) => {
-                    mouseX.set(e.clientX);
-                    mouseY.set(e.clientY);
+                    setIsVisible(true);
+                    if (e.touches && e.touches.length > 0) {
+                        mouseX.set(e.touches[0].clientX);
+                        mouseY.set(e.touches[0].clientY);
+                    } else {
+                        mouseX.set(e.clientX);
+                        mouseY.set(e.clientY);
+                    }
                 };
+
+                const handleTouchEnd = () => {
+                    if (isTouchDevice) {
+                        setIsVisible(false);
+                    }
+                };
+
                 window.addEventListener("mousemove", moveCursor);
-                return () => window.removeEventListener("mousemove", moveCursor);
+                window.addEventListener("touchmove", moveCursor);
+                window.addEventListener("touchstart", moveCursor);
+                window.addEventListener("touchend", handleTouchEnd);
+                return () => {
+                    window.removeEventListener("mousemove", moveCursor);
+                    window.removeEventListener("touchmove", moveCursor);
+                    window.removeEventListener("touchstart", moveCursor);
+                    window.removeEventListener("touchend", handleTouchEnd);
+                };
             }, []);
 
             return (
-                <>
+                <motion.div
+                    animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                >
                     <motion.div
                         className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-dot"
                         style={{ left: dotX, top: dotY, translateX: "-50%", translateY: "-50%" }}
@@ -543,7 +578,7 @@
                         className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-outline mix-blend-difference"
                         style={{ left: outlineX, top: outlineY, translateX: "-50%", translateY: "-50%" }}
                     />
-                </>
+                </motion.div>
             );
         };
 
