@@ -63,33 +63,50 @@
         href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS with Fallbacks -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        'neon': '#00FF6A', // The requested neon green
-                        'black-pure': '#000000',
-                        'charcoal': '#0a0a0a',
-                        'glass': 'rgba(255, 255, 255, 0.03)',
-                        'glass-hover': 'rgba(255, 255, 255, 0.08)',
-                    },
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        serif: ['Merriweather', 'serif'],
-                        mono: ['Space Grotesk', 'monospace'],
-                    },
-                    cursor: {
-                        none: 'none',
-                    },
-                    animation: {
-                        'spin-slow': 'spin 12s linear infinite',
+        if (typeof tailwind === 'undefined') {
+            console.warn("⚠️ Primary Tailwind CDN failed to load. Attempting jsDelivr fallback...");
+            document.write('<script src="https://cdn.jsdelivr.net/npm/tailwindcss-cdn@3.4.10/tailwindcss.js"><\/script>');
+        }
+    </script>
+    <script>
+        if (typeof tailwind === 'undefined') {
+            console.warn("⚠️ jsDelivr Tailwind CDN failed to load. Attempting UNPKG fallback...");
+            document.write('<script src="https://unpkg.com/tailwindcss-cdn@3.4.10/tailwindcss.js"><\/script>');
+        }
+    </script>
+    <script>
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'neon': '#00FF6A', // The requested neon green
+                            'black-pure': '#000000',
+                            'charcoal': '#0a0a0a',
+                            'glass': 'rgba(255, 255, 255, 0.03)',
+                            'glass-hover': 'rgba(255, 255, 255, 0.08)',
+                        },
+                        fontFamily: {
+                            sans: ['Outfit', 'sans-serif'],
+                            serif: ['Merriweather', 'serif'],
+                            mono: ['Space Grotesk', 'monospace'],
+                        },
+                        cursor: {
+                            none: 'none',
+                        },
+                        animation: {
+                            'spin-slow': 'spin 12s linear infinite',
+                        }
                     }
                 }
             }
+        } else {
+            console.error("❌ Tailwind CSS failed to load from all CDNs. Initializing empty stub to prevent script crashes.");
+            window.tailwind = { config: {} };
         }
     </script>
 
@@ -104,6 +121,10 @@
 
     <!-- Styles -->
     <style>
+        :root {
+            --neon: #00FF6A;
+        }
+
         body {
             background-color: #000000;
             color: #ffffff;
@@ -141,7 +162,7 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #00FF6A;
+            background: var(--neon);
         }
 
         /* Utilities */
@@ -152,7 +173,7 @@
         }
 
         .text-stroke:hover {
-            -webkit-text-stroke: 1px #00FF6A;
+            -webkit-text-stroke: 1px var(--neon);
             color: rgba(0, 255, 106, 0.1);
         }
 
@@ -160,13 +181,55 @@
         .custom-cursor-dot {
             width: 8px;
             height: 8px;
-            background-color: #00FF6A;
+            background-color: var(--neon);
         }
 
         .custom-cursor-outline {
             width: 40px;
             height: 40px;
             border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Skill Items Hover Scale & snappy transition */
+        .skill-item {
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        .skill-item:hover {
+            transform: scale(1.2) !important;
+        }
+
+        /* Skill Icon Wrapper (Rotates 45 degrees to form diamond) */
+        .skill-icon-wrap {
+            transition: transform 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .skill-item:hover .skill-icon-wrap {
+            transform: rotate(45deg) !important;
+            border-color: #00FF6A !important;
+            box-shadow: 0 0 30px rgba(0, 255, 106, 0.3) !important;
+        }
+
+        /* Inner Icon Image (Counter-rotates so it stays upright) */
+        .skill-icon-wrap img {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .skill-item:hover .skill-icon-wrap img {
+            transform: rotate(-45deg) !important;
+        }
+
+        /* Scroll Reveal Animations (IntersectionObserver) */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
     <style>
@@ -237,6 +300,9 @@
 
 <body>
 
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+
     <!-- App Root -->
     <div id="root"></div>
 
@@ -296,7 +362,25 @@
                     // Push new visit entry
                     push(visitsRef, visitData)
                         .then(() => console.log("✅ Visitor logged to Firebase DB:", visitorId))
-                        .catch((err) => console.error("❌ Error logging visitor:", err));
+                        .catch((err) => {
+                            if (err.message && err.message.includes("PERMISSION_DENIED")) {
+                                console.warn("⚠️ Firebase Realtime Database write permission denied.\n" +
+                                     "Please update your database security rules in the Firebase Console to allow writes to '/visitors'.\n" +
+                                     "Example rules:\n" +
+                                     "{\n" +
+                                     "  \"rules\": {\n" +
+                                     "    \".read\": false,\n" +
+                                     "    \".write\": false,\n" +
+                                     "    \"visitors\": {\n" +
+                                     "      \".read\": false,\n" +
+                                     "      \".write\": true\n" +
+                                     "    }\n" +
+                                     "  }\n" +
+                                     "}");
+                            } else {
+                                console.error("❌ Error logging visitor:", err);
+                            }
+                        });
 
                 } catch (err) {
                     console.error("Tracking Error:", err);
@@ -401,128 +485,14 @@
             );
         };
 
-        const NetworkEffect = () => {
-            const [nodes, setNodes] = useState([]);
-            const [lines, setLines] = useState([]);
 
-            // Generate random floating nodes
-            useEffect(() => {
-                const nodeCount = 25; // As per guide
-                const initialNodes = [];
-                for (let i = 0; i < nodeCount; i++) {
-                    initialNodes.push({
-                        id: i,
-                        x: Math.random() * 100,
-                        y: Math.random() * 100,
-                        // Random velocities for floating effect
-                        vx: (Math.random() - 0.5) * 0.15,
-                        vy: (Math.random() - 0.5) * 0.15,
-                    });
-                }
-                setNodes(initialNodes);
-            }, []);
-
-            // Animation Loop for floating movement and line connections
-            useAnimationLoop((time) => {
-                setNodes(prevNodes => prevNodes.map(node => {
-                    let newX = node.x + node.vx;
-                    let newY = node.y + node.vy;
-
-                    // Bounce off edges
-                    if (newX <= 0 || newX >= 100) node.vx *= -1;
-                    if (newY <= 0 || newY >= 100) node.vy *= -1;
-
-                    return { ...node, x: newX, y: newY };
-                }));
-
-                setLines(calculateLines(nodes));
-            });
-
-            // Calculate connections
-            const calculateLines = (currentNodes) => {
-                const newLines = [];
-                const maxDistance = 20; // 20% of screen width connection range
-
-                for (let i = 0; i < currentNodes.length; i++) {
-                    for (let j = i + 1; j < currentNodes.length; j++) {
-                        const node1 = currentNodes[i];
-                        const node2 = currentNodes[j];
-
-                        const dx = node1.x - node2.x;
-                        const dy = node1.y - node2.y;
-                        // Approximate aspect ratio correction (assuming 16:9 roughly, or just use raw %)
-                        const aspectCorrection = 1.77;
-                        const dist = Math.sqrt(dx * dx + (dy * dy * aspectCorrection));
-
-                        if (dist < maxDistance) {
-                            newLines.push({
-                                id: `${node1.id}-${node2.id}`,
-                                x1: node1.x, y1: node1.y,
-                                x2: node2.x, y2: node2.y,
-                                opacity: 1 - (dist / maxDistance) // Fade out as they get further
-                            });
-                        }
-                    }
-                }
-                return newLines;
-            };
-
-            return (
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                    {/* Lines */}
-                    {lines.map(line => {
-                        const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * 180 / Math.PI;
-                        const length = Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2));
-                        return (
-                            <div
-                                key={line.id}
-                                className="absolute h-[1px] bg-neon origin-left"
-                                style={{
-                                    left: `${line.x1}%`,
-                                    top: `${line.y1}%`,
-                                    width: `${length}%`,
-                                    transform: `rotate(${angle}deg)`,
-                                    opacity: line.opacity * 0.4
-                                }}
-                            />
-                        );
-                    })}
-
-                    {/* Nodes */}
-                    {nodes.map(node => (
-                        <div
-                            key={node.id}
-                            className="absolute w-1.5 h-1.5 bg-neon rounded-full"
-                            style={{
-                                left: `${node.x}%`,
-                                top: `${node.y}%`,
-                                transform: 'translate(-50%, -50%)',
-                                boxShadow: `0 0 10px #00ff00`
-                            }}
-                        />
-                    ))}
-                </div>
-            );
-        };
-
-        // Helper hook for animation frame
-        const useAnimationLoop = (callback) => {
-            const requestRef = useRef();
-            const animate = (time) => {
-                callback(time);
-                requestRef.current = requestAnimationFrame(animate);
-            };
-            useEffect(() => {
-                requestRef.current = requestAnimationFrame(animate);
-                return () => cancelAnimationFrame(requestRef.current);
-            }, [callback]); // Careful with dependency here
-        };
 
         // 2. Custom Cursor
         const Cursor = () => {
             const mouseX = useMotionValue(-100);
             const mouseY = useMotionValue(-100);
             const [isVisible, setIsVisible] = useState(true);
+            const [isHovered, setIsHovered] = useState(false);
 
             const springConfig = { damping: 25, stiffness: 700 };
             const dotX = useSpring(mouseX, springConfig);
@@ -553,15 +523,48 @@
                     }
                 };
 
+                const handleMouseOver = (e) => {
+                    const target = e.target;
+                    if (target && (
+                        target.closest('a') || 
+                        target.closest('button') || 
+                        target.closest('.project-card') || 
+                        target.closest('.skill-item') || 
+                        target.closest('.nav-logo') || 
+                        target.closest('.social-btn')
+                    )) {
+                        setIsHovered(true);
+                    }
+                };
+
+                const handleMouseOut = (e) => {
+                    const target = e.target;
+                    if (target && (
+                        target.closest('a') || 
+                        target.closest('button') || 
+                        target.closest('.project-card') || 
+                        target.closest('.skill-item') || 
+                        target.closest('.nav-logo') || 
+                        target.closest('.social-btn')
+                    )) {
+                        setIsHovered(false);
+                    }
+                };
+
                 window.addEventListener("mousemove", moveCursor);
                 window.addEventListener("touchmove", moveCursor);
                 window.addEventListener("touchstart", moveCursor);
                 window.addEventListener("touchend", handleTouchEnd);
+                window.addEventListener("mouseover", handleMouseOver);
+                window.addEventListener("mouseout", handleMouseOut);
+
                 return () => {
                     window.removeEventListener("mousemove", moveCursor);
                     window.removeEventListener("touchmove", moveCursor);
                     window.removeEventListener("touchstart", moveCursor);
                     window.removeEventListener("touchend", handleTouchEnd);
+                    window.removeEventListener("mouseover", handleMouseOver);
+                    window.removeEventListener("mouseout", handleMouseOut);
                 };
             }, []);
 
@@ -572,10 +575,23 @@
                 >
                     <motion.div
                         className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-dot"
+                        animate={{
+                            width: isHovered ? 4 : 8,
+                            height: isHovered ? 4 : 8,
+                            backgroundColor: isHovered ? "#ffffff" : "#00FF6A"
+                        }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
                         style={{ left: dotX, top: dotY, translateX: "-50%", translateY: "-50%" }}
                     />
                     <motion.div
                         className="fixed pointer-events-none z-[9999] rounded-full custom-cursor-outline mix-blend-difference"
+                        animate={{
+                            width: isHovered ? 60 : 40,
+                            height: isHovered ? 60 : 40,
+                            borderColor: isHovered ? "#00FF6A" : "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: isHovered ? "rgba(0, 255, 106, 0.1)" : "rgba(0, 0, 0, 0)"
+                        }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
                         style={{ left: outlineX, top: outlineY, translateX: "-50%", translateY: "-50%" }}
                     />
                 </motion.div>
@@ -609,7 +625,7 @@
                 >
                     <div className="flex justify-between items-center select-none">
                         {/* Logo */}
-                        <div className="cursor-pointer group z-50">
+                        <div className="nav-logo cursor-pointer group z-50">
                             <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-white group-hover:text-neon transition-colors duration-300">
                                 <path d="M12,4.5c-4.1,0-7.5,3.4-7.5,7.5c0,4.1,3.4,7.5,7.5,7.5s7.5-3.4,7.5-7.5C19.5,7.9,16.1,4.5,12,4.5z M7.5,10 c0.8,0,1.5,0.7,1.5,1.5S8.3,13,7.5,13S6,12.3,6,11.5S6.7,10,7.5,10z M12,17.5c-2,0-3.8-1.2-4.5-3h9C15.8,16.3,14,17.5,12,17.5z M16.5,13c-0.8,0-1.5-0.7-1.5-1.5S15.7,10,16.5,10s1.5,0.7,1.5,1.5S17.3,13,16.5,13z" />
                             </svg>
@@ -769,12 +785,8 @@
             return (
                 <section id="about" className="py-20 md:py-32 px-6 md:px-20 max-w-7xl mx-auto relative z-10 w-full">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
-                            className="order-2 md:order-1"
+                        <div
+                            className="fade-up order-2 md:order-1"
                         >
                             <h2 className="text-sm font-mono text-neon mb-4 tracking-widest">01 / IDENTITY</h2>
                             <p className="text-lg md:text-2xl leading-relaxed text-gray-300 font-light text-left">
@@ -792,7 +804,7 @@
                                     <p className="text-gray-500 text-xs md:text-sm">Tech Stack</p>
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
 
                         <div className="relative group flex justify-center order-1 md:order-2">
                             <motion.div
@@ -825,19 +837,17 @@
             return (
                 <section className="py-20 border-b border-white/5 relative z-10">
                     <div className="max-w-7xl mx-auto px-6 md:px-20">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-[1.75rem] gap-8">
                             {services.map((s, i) => (
-                                <motion.div
+                                <div
                                     key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.2 }}
-                                    className="p-8 bg-zinc-900/30 border border-white/5 hover:border-neon/30 transition-all group hover:bg-zinc-900/50 rounded-lg md:rounded-none"
+                                    style={{ transitionDelay: `${i * 0.15}s` }}
+                                    className="fade-up p-8 bg-[#000000] border border-white/5 hover:border-neon hover:-translate-y-[5px] transition-all duration-300 group rounded-lg"
                                 >
                                     <i data-lucide={s.icon} className="w-10 h-10 text-neon mb-6 opacity-80 group-hover:opacity-100 transition-opacity"></i>
                                     <h3 className="text-xl font-bold text-white mb-2">{s.title}</h3>
                                     <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -858,16 +868,12 @@
                                     <p className="text-xs font-mono text-white/30 tracking-[0.25em] uppercase mb-8 text-center border-b border-white/5 pb-4">{group.category}</p>
                                     <div className="flex flex-wrap justify-center gap-8 md:gap-12">
                                         {group.skills.map((skill, i) => (
-                                            <motion.div
+                                            <div
                                                 key={i}
-                                                initial={{ opacity: 0, scale: 0 }}
-                                                whileInView={{ opacity: 1, scale: 1 }}
-                                                transition={{ type: "spring", delay: i * 0.05 }}
-                                                viewport={{ once: true }}
-                                                whileHover={{ scale: 1.2, rotate: 10, filter: "brightness(1.5)" }}
-                                                className="group flex flex-col items-center gap-4 cursor-pointer"
+                                                style={{ transitionDelay: `${i * 0.05}s` }}
+                                                className="fade-up skill-item group flex flex-col items-center gap-4"
                                             >
-                                                <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-neon group-hover:shadow-[0_0_30px_rgba(0,255,106,0.3)] transition-all duration-300">
+                                                <div className="skill-icon-wrap w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 transition-all duration-300">
                                                     <img
                                                         src={skill.icon}
                                                         alt={skill.name}
@@ -879,7 +885,7 @@
                                                     />
                                                 </div>
                                                 <span className="text-xs text-gray-500 font-mono group-hover:text-neon text-center">{skill.name}</span>
-                                            </motion.div>
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -969,11 +975,7 @@
                 <motion.a
                     href={p.link}
                     target={p.link !== "#" ? "_blank" : "_self"}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    style={{ rotateX, rotateY, perspective: 1000 }}
+                    style={{ rotateX, rotateY, perspective: 1000, transitionDelay: `${index * 0.1}s` }}
                     onMouseMove={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         x.set(e.clientX - rect.left - rect.width / 2);
@@ -982,7 +984,7 @@
                     onMouseLeave={() => {
                         x.set(0); y.set(0);
                     }}
-                    className="block group relative flex flex-col h-auto min-h-[450px] md:h-[500px] w-full rounded-xl bg-neutral-900 border border-white/5 overflow-hidden hover:border-neon/50 transition-all duration-500 shadow-2xl"
+                    className="fade-up project-card block group relative flex flex-col h-auto min-h-[450px] md:h-[500px] w-full rounded-xl bg-neutral-900 border border-white/5 overflow-hidden hover:border-neon/50 transition-all duration-500 shadow-2xl"
                 >
                     {/* Cover Image/Gradient Area */}
                     <div className={`relative w-full h-40 md:absolute md:top-0 md:left-0 md:h-3/5 bg-gradient-to-br ${p.gradient} opacity-50 group-hover:opacity-80 transition-opacity duration-500`}>
@@ -1017,7 +1019,7 @@
         const Philosophy = () => {
             return (
                 <section className="py-24 relative overflow-hidden flex items-center justify-center border-t border-white/5 bg-neutral-900/20">
-                    <div className="text-center space-y-4 px-6">
+                    <div className="fade-up text-center space-y-4 px-6">
                         <p className="text-neon font-mono text-xs tracking-[0.3em] uppercase opacity-70">Philosophy</p>
                         <h2 className="text-3xl md:text-6xl font-sans font-black uppercase tracking-tighter text-white transition-colors duration-500 hover:text-neon cursor-default">
                             "Passion defines the Craft."
@@ -1041,28 +1043,28 @@
                     <div className="mt-12 flex flex-wrap justify-center gap-4 md:gap-6 px-4">
                         {/* Email */}
                         <div className="relative group/tip">
-                            <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all" href="https://mail.google.com/mail/?view=cm&fs=1&to=mmrakeshkumar13@gmail.com" target="_blank" rel="noopener noreferrer">
+                            <MagneticButton className="social-btn p-4 rounded-full border border-white/20 bg-white/5 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all" href="https://mail.google.com/mail/?view=cm&fs=1&to=mmrakeshkumar13@gmail.com" target="_blank" rel="noopener noreferrer">
                                 <i data-lucide="mail" className="w-5 h-5"></i>
                             </MagneticButton>
                             <span className="absolute -top-9 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white text-[10px] font-mono px-2 py-1 rounded opacity-0 group-hover/tip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Email</span>
                         </div>
                         {/* LinkedIn */}
                         <div className="relative group/tip">
-                            <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#0077b5] hover:border-[#0077b5] transition-all" href="https://www.linkedin.com/in/rakesh-kumar-m-m-694634346/" target="_blank" rel="noopener noreferrer">
+                            <MagneticButton className="social-btn p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#0077b5] hover:border-[#0077b5] transition-all" href="https://www.linkedin.com/in/rakesh-kumar-m-m-694634346/" target="_blank" rel="noopener noreferrer">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                             </MagneticButton>
                             <span className="absolute -top-9 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white text-[10px] font-mono px-2 py-1 rounded opacity-0 group-hover/tip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">LinkedIn</span>
                         </div>
                         {/* GitHub */}
                         <div className="relative group/tip">
-                            <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-white hover:border-white hover:text-black transition-all" href="https://github.com/rkece" target="_blank" rel="noopener noreferrer">
+                            <MagneticButton className="social-btn p-4 rounded-full border border-white/20 bg-white/5 hover:bg-white hover:border-white hover:text-black transition-all" href="https://github.com/rkece" target="_blank" rel="noopener noreferrer">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                             </MagneticButton>
                             <span className="absolute -top-9 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white text-[10px] font-mono px-2 py-1 rounded opacity-0 group-hover/tip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">GitHub</span>
                         </div>
                         {/* WhatsApp */}
                         <div className="relative group/tip">
-                            <MagneticButton className="p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#25D366] hover:border-[#25D366] hover:text-black transition-all" href="https://wa.me/919789401325" target="_blank" rel="noopener noreferrer">
+                            <MagneticButton className="social-btn p-4 rounded-full border border-white/20 bg-white/5 hover:bg-[#25D366] hover:border-[#25D366] hover:text-black transition-all" href="https://wa.me/919789401325" target="_blank" rel="noopener noreferrer">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
                             </MagneticButton>
                             <span className="absolute -top-9 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white text-[10px] font-mono px-2 py-1 rounded opacity-0 group-hover/tip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">WhatsApp</span>
@@ -1136,6 +1138,30 @@
             useEffect(() => {
                 window.lucide.createIcons();
             });
+
+            // IntersectionObserver Scroll Reveal Animations
+            useEffect(() => {
+                if (showIntro) return;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.05,
+                    rootMargin: "0px 0px -50px 0px"
+                });
+
+                const elements = document.querySelectorAll('.fade-up');
+                elements.forEach(el => observer.observe(el));
+
+                return () => {
+                    elements.forEach(el => observer.unobserve(el));
+                };
+            }, [showIntro]);
 
             return (
                 <main className="bg-black text-white min-h-screen relative selection:bg-neon selection:text-black font-sans">
