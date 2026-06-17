@@ -114,6 +114,14 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        Babel.registerPreset('custom-react', {
+            presets: [
+                [Babel.availablePresets['react'], { runtime: 'classic' }],
+                Babel.availablePresets['es2015']
+            ]
+        });
+    </script>
     <script src="https://unpkg.com/framer-motion@10.16.16/dist/framer-motion.js"></script>
 
     <!-- Icons -->
@@ -306,97 +314,9 @@
     <!-- App Root -->
     <div id="root"></div>
 
-    <!-- Firebase Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
-        import { getDatabase, ref, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCd98eh-kVlHOXQJ3xyqFcjWxnWoV-gHNI",
-            authDomain: "portfolio-3e851.firebaseapp.com",
-            databaseURL: "https://portfolio-3e851-default-rtdb.firebaseio.com",
-            projectId: "portfolio-3e851",
-            storageBucket: "portfolio-3e851.firebasestorage.app",
-            messagingSenderId: "238693477072",
-            appId: "1:238693477072:web:275291172c5e50bf8b4cd5",
-            measurementId: "G-LMPNXS7XK6"
-        };
-
-        try {
-            const app = initializeApp(firebaseConfig);
-            const analytics = getAnalytics(app);
-            const database = getDatabase(app);
-
-            console.log("🔥 Firebase initialized successfully");
-            window.firebaseApp = app;
-            window.firebaseDb = database;
-
-            // --- Visitor Tracking Logic ---
-            function trackVisitor() {
-                try {
-                    const VISITOR_KEY = 'portfolio_visitor_id';
-                    let visitorId = localStorage.getItem(VISITOR_KEY);
-                    let isFirstVisit = false;
-
-                    // If no ID exists, create one
-                    if (!visitorId) {
-                        visitorId = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-                        localStorage.setItem(VISITOR_KEY, visitorId);
-                        isFirstVisit = true;
-                    }
-
-                    // Create a reference to the 'visitors' node
-                    const visitsRef = ref(database, 'visitors');
-
-                    // Data to store
-                    const visitData = {
-                        visitorId: visitorId,
-                        timestamp: serverTimestamp(),
-                        lastSeen: new Date().toISOString(),
-                        userAgent: navigator.userAgent,
-                        resolution: `${window.screen.width}x${window.screen.height}`,
-                        isFirstVisit: isFirstVisit
-                    };
-
-                    // Push new visit entry
-                    push(visitsRef, visitData)
-                        .then(() => console.log("✅ Visitor logged to Firebase DB:", visitorId))
-                        .catch((err) => {
-                            if (err.message && err.message.includes("PERMISSION_DENIED")) {
-                                console.warn("⚠️ Firebase Realtime Database write permission denied.\n" +
-                                     "Please update your database security rules in the Firebase Console to allow writes to '/visitors'.\n" +
-                                     "Example rules:\n" +
-                                     "{\n" +
-                                     "  \"rules\": {\n" +
-                                     "    \".read\": false,\n" +
-                                     "    \".write\": false,\n" +
-                                     "    \"visitors\": {\n" +
-                                     "      \".read\": false,\n" +
-                                     "      \".write\": true\n" +
-                                     "    }\n" +
-                                     "  }\n" +
-                                     "}");
-                            } else {
-                                console.error("❌ Error logging visitor:", err);
-                            }
-                        });
-
-                } catch (err) {
-                    console.error("Tracking Error:", err);
-                }
-            }
-
-            // Run tracking
-            trackVisitor();
-
-        } catch (e) {
-            console.error("Firebase Init Error:", e);
-        }
-    </script>
 
     <!-- Main React App -->
-    <script type="text/babel">
+    <script type="text/babel" data-presets="custom-react">
         const { useState, useEffect, useRef, useMemo } = React;
         const { motion, useScroll, useTransform, useSpring, AnimatePresence, useMotionValue, useMotionTemplate } = window.Motion;
 
@@ -1137,7 +1057,7 @@
 
             useEffect(() => {
                 window.lucide.createIcons();
-            });
+            }, []);
 
             // IntersectionObserver Scroll Reveal Animations
             useEffect(() => {

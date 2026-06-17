@@ -113,10 +113,30 @@ All documentation is in the markdown files:
 
 ---
 
-## 🎉 You're Ready!
-
 Your portfolio is now SEO-optimized and ready to rank on Google!
 
 **Next:** Deploy and submit to Google Search Console.
 
 **Good luck! 🚀**
+
+---
+
+## 🔧 Troubleshooting & Performance Fixes (June 2026)
+
+### 1. Black Screen Error (Babel Standalone JSX Conflict)
+* **What was happening**: When loading the page, it would show a completely blank black screen. The browser console showed the following error:
+  `Uncaught SyntaxError: Cannot use import statement outside a module`
+* **Why it occurred**: Newer versions of `@babel/standalone` default to the **automatic JSX runtime**, which generates ES module imports (`import { jsx } from "react/jsx-runtime"`) inside standard script tags. This is invalid in the browser runtime and causes compilation failure.
+* **The Fix**: Registered a custom preset `custom-react` in the header of the page that configures Babel standalone to use the **classic JSX runtime** (compiling JSX to standard `React.createElement` instead of ES imports), and updated the script tag to use it:
+  ```html
+  <script type="text/babel" data-presets="custom-react">
+  ```
+
+### 2. Website Performance Lag
+* **What was happening**: The website lagged or hitched significantly during page interactions.
+* **Why it occurred**: The `useEffect` hook that registers Lucide icons had no dependency array, meaning it ran on **every single render**. Since it queries and modifies the DOM repeatedly, this caused massive layout thrashing.
+* **The Fix**: Added an empty dependency array `[]` to the Lucide icon registration hook in the `App` component so that it executes only once when the page initially mounts.
+
+### 3. Firebase Dependencies Removed
+* **What was done**: Removed all Firebase dependencies, configurations, visitor tracking logic, and Realtime Database scripts. This cleans up the console from write-permission warnings, decreases network usage, and optimizes page load performance.
+
