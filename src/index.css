@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --neon: #00FF6A;
+  }
+
+  html {
+    background-color: #0A0A0A;
+    color: #ffffff;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Lenis recommended CSS */
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00FF6A;
+}
+
+/* Background Grain Noise Overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Kinetic Typography Text Outline */
+.text-stroke {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.25);
+  color: transparent;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-stroke:hover {
+  -webkit-text-stroke: 1.5px #00FF6A;
+  color: rgba(0, 255, 106, 0.08);
+}
+
+.text-stroke-filled {
+  -webkit-text-stroke: 1px #00FF6A;
+  color: transparent;
+}
+
+/* Glow Effects */
+.neon-glow-sm {
+  box-shadow: 0 0 15px rgba(0, 255, 106, 0.2);
+}
+
+.neon-glow-lg {
+  box-shadow: 0 0 35px rgba(0, 255, 106, 0.35);
+}
+
+.neon-border-glow:hover {
+  border-color: #00FF6A !important;
+  box-shadow: 0 0 25px rgba(0, 255, 106, 0.25);
+}
+
+/* Scanline Effect for Model Card */
+.scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+}
+
+/* Grid overlay background */
+.bg-grid-pattern {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* 3D Perspective utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Ripple animation for 7.10 Click Ripple */
+@keyframes ripple {
+  0% {
+    width: 0px;
+    height: 0px;
+    opacity: 0.35;
+  }
+  100% {
+    width: 240px;
+    height: 240px;
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 0.6s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
