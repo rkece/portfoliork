@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Mail, Linkedin, Github, MessageSquare, Send, CheckCircle2, Download } from 'lucide-react';
+import { Mail, Linkedin, Github, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -277,20 +277,6 @@ export const Contact = () => {
               )}
             </button>
           </form>
-
-          {/* Resume Download CTA Bar */}
-          <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
-            <span className="text-xs font-mono text-gray-400">NEED OFFICIAL RESUME PDF?</span>
-            <MagneticButton
-              href="/rakeshkumarresume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-2.5 rounded-full border border-neon/40 text-neon font-mono text-xs tracking-wider flex items-center gap-2 hover:bg-neon hover:text-black transition-all"
-            >
-              <Download className="w-4 h-4" />
-              <span>DOWNLOAD CV</span>
-            </MagneticButton>
-          </div>
         </motion.div>
       </div>
     </section>

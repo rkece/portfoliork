@@ -50,9 +50,10 @@ export const Skills = () => {
     {
       category: "HARDWARE & NETWORKING",
       skills: [
+        { name: "Cisco Packet Tracer", icon: "https://cdn.simpleicons.org/cisco/049FD9" },
         { name: "Arduino", icon: "https://cdn.simpleicons.org/arduino/00979D" },
-        { name: "Packet Tracer", icon: "https://cdn.simpleicons.org/cisco/049FD9" },
         { name: "IoT Devices", icon: "https://cdn.simpleicons.org/raspberrypi/C51A4A" },
+        { name: "Circuit Designing", icon: "/circuit.svg" },
       ],
     },
   ];

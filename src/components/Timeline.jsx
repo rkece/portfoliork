@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion';
-import { GraduationCap, BookOpen } from 'lucide-react';
+import { GraduationCap, BookOpen, Briefcase, Cpu, Network } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -40,41 +40,68 @@ export const Timeline = () => {
 
   const timelineEvents = [
     {
+      year: "JUNE 2026 — AUG 2026",
+      title: "Software Development Engineer (SDE) Internship",
+      institution: "Aaytham Consulting (AyC)",
+      type: "INTERNSHIP",
+      badge: "SDE ROLE",
+      desc: "Contributed to software feature development and testing at AyC, gaining hands-on experience in a collaborative engineering workflow.",
+      icon: Briefcase
+    },
+    {
+      year: "MAY 2026 — JUNE 2026",
+      title: "Industrial Trainee - Data Networking",
+      institution: "BSNL India",
+      type: "INTERNSHIP",
+      badge: "NETWORKING",
+      desc: "Assisted with network configuration and monitoring at BSNL, gaining hands-on exposure to networking protocols and telecom troubleshooting.",
+      icon: Network
+    },
+    {
+      year: "JUNE 2025",
+      title: "Industrial Automation Internship",
+      institution: "Siemens COE — Anna University, MIT Campus",
+      type: "INTERNSHIP",
+      badge: "PLC & HMI",
+      desc: "Programmed PLC logic and designed HMI interfaces for industrial automation and real-time process monitoring. Learned industrial control system workflows.",
+      icon: Cpu
+    },
+    {
       year: "2024 — 2028",
       title: "B.E. Electronics & Communication Engineering",
       institution: "R.M.K. Engineering College",
-      type: "COLLEGE EDUCATION",
-      badge: "ECE STUDENT",
-      desc: "Pursuing Bachelor of Engineering specializing in Full Stack Software Development (Web & Mobile), IoT embedded systems, and Application Security.",
+      type: "EDUCATION",
+      badge: "CGPA 8.33",
+      desc: "Currently pursuing B.E. in ECE (Third Year), CGPA: 8.33. Focused on embedded systems, IoT, and software development with hands-on hardware/software experience.",
       icon: GraduationCap
     },
     {
       year: "2023 — 2024",
-      title: "Higher Secondary Education (HSE) — CS Group",
+      title: "Higher Secondary Education (HSE - Class 12)",
       institution: "Vivekananda Matric Hr Sec School",
-      type: "SCHOOL EDUCATION",
-      badge: "COMPUTER SCIENCE",
-      desc: "Completed Higher Secondary Education focusing on Computer Science, Advanced Mathematics, Physics, and Software Fundamentals.",
+      type: "EDUCATION",
+      badge: "STATE BOARD PCM",
+      desc: "State Board, Class 12. Completed higher secondary education with a focus on Physics, Chemistry, and Mathematics (PCM).",
       icon: BookOpen
     }
   ];
 
   return (
     <section id="timeline" ref={containerRef} className="py-24 px-6 md:px-12 max-w-5xl mx-auto relative z-10 space-y-16">
-      {/* Section Header: 05 // EDUCATION & TIMELINE */}
+      {/* Section Header: 05 // EXPERIENCE & ACADEMIC TIMELINE */}
       <div className="flex items-center gap-4 gsap-reveal">
         <span className="text-xs font-mono text-neon tracking-widest uppercase">
-          05 // EDUCATION & ACADEMIC TIMELINE
+          05 // EXPERIENCE & ACADEMIC TIMELINE
         </span>
         <div className="h-[1px] flex-grow bg-white/10" />
       </div>
 
       <div className="text-center max-w-2xl mx-auto space-y-2 gsap-reveal">
         <h2 className="text-3xl sm:text-5xl font-serif font-bold text-white tracking-tight">
-          Education Journey
+          Career & Education
         </h2>
         <p className="text-gray-400 font-light text-base">
-          Academic milestones from Computer Science secondary schooling to B.E. Electronics & Communication Engineering.
+          Professional engineering internships, industrial trainings, and academic degree milestones.
         </p>
       </div>
 
