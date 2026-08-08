@@ -68,10 +68,10 @@ export const About = () => {
 
           <div className="space-y-4 text-gray-300 font-light text-base md:text-lg leading-relaxed">
             <p>
-              I am <strong className="text-white font-medium">Rakesh Kumar M M</strong>, a Full Stack Software Craftsman based in Tamil Nadu, India. I specialize in building high-performance <span className="text-white font-serif font-semibold underline decoration-neon/40">Web and Mobile Applications</span>, reinforced with <span className="text-white font-serif font-semibold underline decoration-neon/40">Application Security</span> hardening and hardware IoT integrations.
+              I am <strong className="text-white font-medium">Rakesh Kumar M M</strong>, a ECE student focused on Software Development and IoT, building Web and Mobile apps alongside microcontroller-based hardware projects. Comfortable across both software and hardware layers.
             </p>
             <p>
-              Currently pursuing my Bachelor's in <strong className="text-white">Electronics and Communication Engineering</strong> at <strong className="text-white">R.M.K. Engineering College</strong> (2024–2028). My mission is to build software products that combine elegant motion with resilient backend architecture.
+              Currently pursuing my Bachelor's in <strong className="text-white">Electronics and Communication Engineering</strong> at <strong className="text-white">R.M.K. Engineering College</strong> (2024–2028).
             </p>
           </div>
         </div>

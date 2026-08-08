@@ -1,38 +1,46 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Star, GitBranch, Terminal, Shield, Award, Sparkles } from 'lucide-react';
+import { Terminal, Shield, Award, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const Highlights = () => {
   const highlights = [
     {
       title: "Full Stack Mastery",
       stat: "MERN Stack",
-      desc: "Architecting end-to-end applications with React, Node.js, Express, MongoDB, and Firebase.",
+      desc: "Architecting end-to-end applications with Next.js, React, Node.js, PostgreSQL, and Firebase.",
       icon: Terminal
     },
     {
-      title: "Security Auditing",
-      stat: "OWASP ZAP",
-      desc: "Proactive vulnerability assessment, pen-testing Web APIs, and hardening modern authentication flows.",
+      title: "Industrial Automation",
+      stat: "Siemens COE",
+      desc: "PLC logic programming & HMI interface design for real-time industrial process monitoring.",
       icon: Shield
     },
     {
       title: "Academic Standing",
       stat: "8.33 CGPA",
-      desc: "ECE student at R.M.K. Engineering College consistently maintaining top academic performance.",
+      desc: "Third-year ECE student at R.M.K. Engineering College consistently maintaining high performance.",
       icon: Award
     },
     {
       title: "IoT & Hardware Telemetry",
       stat: "Embedded Systems",
-      desc: "Building autonomous rovers and distress protocols integrated with real-time web telemetry.",
+      desc: "Arduino & microcontroller-based hardware projects integrated with real-time web & mobile applications.",
       icon: Sparkles
     }
   ];
 
+  const certifications = [
+    { name: "Application Development", issuer: "Microsoft Amazon" },
+    { name: "Redshift Cloud", issuer: "Amazon Web Services (AWS)" },
+    { name: "Networking Basics", issuer: "Cisco Networking Academy" },
+    { name: "PLC and HMI", issuer: "Siemens Centre of Excellence" }
+  ];
+
   return (
-    <section className="py-20 bg-neutral-950/60 border-y border-white/10 relative z-10">
+    <section className="py-20 bg-neutral-950/60 border-y border-white/10 relative z-10 space-y-16">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
+        {/* Section Header */}
         <div className="flex items-center gap-4 mb-12">
           <span className="text-xs font-mono text-neon tracking-widest uppercase">
             05 // HIGHLIGHTS & CREDENTIALS
@@ -40,7 +48,8 @@ export const Highlights = () => {
           <div className="h-[1px] flex-grow bg-white/10" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Highlights Metric Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {highlights.map((h) => {
             const Icon = h.icon;
             return (
@@ -66,7 +75,37 @@ export const Highlights = () => {
             );
           })}
         </div>
+
+        {/* Certifications Sub-Section */}
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 text-neon" />
+            <h3 className="text-sm font-mono text-white tracking-widest uppercase font-bold">
+              VERIFIED INDUSTRIAL CERTIFICATIONS
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {certifications.map((cert) => (
+              <div
+                key={cert.name}
+                className="p-5 rounded-xl bg-neutral-900/80 border border-white/10 hover:border-neon/40 transition-colors space-y-1"
+              >
+                <span className="text-xs font-mono text-neon font-bold uppercase block">
+                  CERTIFIED
+                </span>
+                <h4 className="font-serif font-bold text-base text-white">
+                  {cert.name}
+                </h4>
+                <p className="text-xs font-mono text-gray-400">
+                  {cert.issuer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
 };
+
