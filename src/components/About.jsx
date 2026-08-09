@@ -50,8 +50,14 @@ export const About = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-        {/* Left Column: Text & Bio */}
-        <div className="lg:col-span-7 space-y-6 gsap-reveal">
+        {/* Left Column: Text & Bio (Enters from Left) */}
+        <motion.div
+          initial={{ opacity: 0, x: -80 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-7 space-y-6"
+        >
           <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-75" />
@@ -74,10 +80,16 @@ export const About = () => {
               Currently pursuing my Bachelor's in <strong className="text-white">Electronics and Communication Engineering</strong> at <strong className="text-white">R.M.K. Engineering College</strong> (2024–2028).
             </p>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right Column: User Portrait Image with 3D Tilt Card (No green tint on photo) */}
-        <div className="lg:col-span-5 flex justify-center perspective-1000 gsap-reveal">
+        {/* Right Column: User Portrait Image (Enters from Right) */}
+        <motion.div
+          initial={{ opacity: 0, x: 80 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-5 flex justify-center perspective-1000"
+        >
           <motion.div
             ref={cardRef}
             onMouseMove={handleMouseMove}
@@ -98,7 +110,7 @@ export const About = () => {
             <div className="absolute -top-3 -left-3 w-16 h-16 border-t-2 border-l-2 border-white/40 opacity-60 group-hover:border-white group-hover:translate-x-[-4px] group-hover:translate-y-[-4px] transition-all duration-300" />
             <div className="absolute -bottom-3 -right-3 w-16 h-16 border-b-2 border-r-2 border-white/40 opacity-60 group-hover:border-white group-hover:translate-x-[4px] group-hover:translate-y-[4px] transition-all duration-300" />
 
-            {/* Image Container with User Photo (Clean original colors, no green tint overlay) */}
+            {/* Image Container with User Photo */}
             <div className="relative z-10 rounded-3xl overflow-hidden bg-neutral-900 border border-white/15 p-2 backdrop-blur-md group-hover:border-white/40 transition-colors duration-500 shadow-2xl">
               <div className="aspect-[4/5] rounded-2xl overflow-hidden relative bg-black">
                 <img
@@ -109,7 +121,7 @@ export const About = () => {
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

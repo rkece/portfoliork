@@ -50,11 +50,16 @@ export const Highlights = () => {
 
         {/* Highlights Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {highlights.map((h) => {
+          {highlights.map((h, i) => {
             const Icon = h.icon;
+            const isLeft = i % 2 === 0;
             return (
-              <div
+              <motion.div
                 key={h.title}
+                initial={{ opacity: 0, x: isLeft ? -70 : 70 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="group p-6 rounded-2xl bg-neutral-900/60 border border-white/10 hover:border-neon/50 backdrop-blur-md transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
@@ -71,7 +76,7 @@ export const Highlights = () => {
                     {h.desc}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -86,22 +91,29 @@ export const Highlights = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {certifications.map((cert) => (
-              <div
-                key={cert.name}
-                className="p-5 rounded-xl bg-neutral-900/80 border border-white/10 hover:border-neon/40 transition-colors space-y-1"
-              >
-                <span className="text-xs font-mono text-neon font-bold uppercase block">
-                  CERTIFIED
-                </span>
-                <h4 className="font-serif font-bold text-base text-white">
-                  {cert.name}
-                </h4>
-                <p className="text-xs font-mono text-gray-400">
-                  {cert.issuer}
-                </p>
-              </div>
-            ))}
+            {certifications.map((cert, i) => {
+              const isLeft = i % 2 === 0;
+              return (
+                <motion.div
+                  key={cert.name}
+                  initial={{ opacity: 0, x: isLeft ? -60 : 60 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: false, amount: 0.3 }}
+                  transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="p-5 rounded-xl bg-neutral-900/80 border border-white/10 hover:border-neon/40 transition-colors space-y-1"
+                >
+                  <span className="text-xs font-mono text-neon font-bold uppercase block">
+                    CERTIFIED
+                  </span>
+                  <h4 className="font-serif font-bold text-base text-white">
+                    {cert.name}
+                  </h4>
+                  <p className="text-xs font-mono text-gray-400">
+                    {cert.issuer}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

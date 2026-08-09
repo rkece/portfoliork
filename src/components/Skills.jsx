@@ -76,25 +76,35 @@ export const Skills = () => {
       </div>
 
       {/* Categories & Diamond-Rotation Skill Icon Row */}
-      <div className="space-y-16 pt-6 gsap-reveal">
-        {skillCategories.map((cat) => (
-          <div key={cat.category} className="space-y-8 text-center">
-            <h3 className="text-xs font-mono text-gray-400 tracking-widest uppercase font-semibold">
-              {cat.category}
-            </h3>
+      <div className="space-y-16 pt-6">
+        {skillCategories.map((cat, catIdx) => {
+          const isLeft = catIdx % 2 === 0;
+          return (
+            <motion.div
+              key={cat.category}
+              initial={{ opacity: 0, x: isLeft ? -90 : 90 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-8 text-center"
+            >
+              <h3 className="text-xs font-mono text-neon tracking-widest uppercase font-semibold">
+                // {cat.category}
+              </h3>
 
-            <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-10">
-              {cat.skills.map((skill) => (
-                <DiamondSkillCard
-                  key={skill.name}
-                  skill={skill}
-                  hoveredSkillName={hoveredSkillName}
-                  setHoveredSkillName={setHoveredSkillName}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
+              <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-10">
+                {cat.skills.map((skill) => (
+                  <DiamondSkillCard
+                    key={skill.name}
+                    skill={skill}
+                    hoveredSkillName={hoveredSkillName}
+                    setHoveredSkillName={setHoveredSkillName}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
     </section>
   );
