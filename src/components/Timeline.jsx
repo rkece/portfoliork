@@ -180,8 +180,14 @@ const TimelineItem = ({ item, isEven, Icon }) => {
     rawY.set(0);
   };
 
+  const startX = isEven ? -90 : 90;
+
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: startX }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       className={`relative flex flex-col md:flex-row items-center ${
         isEven ? 'md:flex-row-reverse' : ''
       }`}
@@ -226,6 +232,6 @@ const TimelineItem = ({ item, isEven, Icon }) => {
           </p>
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };

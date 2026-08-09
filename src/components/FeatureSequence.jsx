@@ -32,8 +32,8 @@ export const FeatureSequence = () => {
 
       {/* 2x2 Grid Layout with 3D Tilt Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 gsap-reveal">
-        {/* Card 1: Full Stack Architecture */}
-        <TiltArchitectureCard>
+        {/* Card 1: Full Stack Architecture (Enters from Left) */}
+        <TiltArchitectureCard direction="left">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon/10 border border-neon/30 text-neon font-mono text-xs uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5" /> FULL STACK ARCHITECTURE
@@ -90,8 +90,8 @@ export const FeatureSequence = () => {
           </div>
         </TiltArchitectureCard>
 
-        {/* Card 2: Cloud Computing */}
-        <TiltArchitectureCard>
+        {/* Card 2: Cloud Computing (Enters from Right) */}
+        <TiltArchitectureCard direction="right">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon/10 border border-neon/30 text-neon font-mono text-xs uppercase tracking-wider">
               <Cloud className="w-3.5 h-3.5" /> CLOUD COMPUTING
@@ -127,8 +127,8 @@ export const FeatureSequence = () => {
           </div>
         </TiltArchitectureCard>
 
-        {/* Card 3: IoT & Embedded Telemetry */}
-        <TiltArchitectureCard>
+        {/* Card 3: IoT & Embedded Telemetry (Enters from Left) */}
+        <TiltArchitectureCard direction="left">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon/10 border border-neon/30 text-neon font-mono text-xs uppercase tracking-wider">
               <Cpu className="w-3.5 h-3.5" /> IOT EMBEDDED SYSTEMS
@@ -160,8 +160,8 @@ export const FeatureSequence = () => {
           </div>
         </TiltArchitectureCard>
 
-        {/* Card 4: Application Security */}
-        <TiltArchitectureCard>
+        {/* Card 4: Application Security (Enters from Right) */}
+        <TiltArchitectureCard direction="right">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon/10 border border-neon/30 text-neon font-mono text-xs uppercase tracking-wider">
               <Shield className="w-3.5 h-3.5" /> APPLICATION SECURITY
@@ -199,8 +199,8 @@ export const FeatureSequence = () => {
   );
 };
 
-// 3D Tilt Card wrapper
-const TiltArchitectureCard = ({ children }) => {
+// 3D Tilt Card wrapper with Left/Right scroll entrance motion
+const TiltArchitectureCard = ({ children, direction = "left" }) => {
   const cardRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isHoverCapable, setIsHoverCapable] = useState(true);
@@ -232,8 +232,16 @@ const TiltArchitectureCard = ({ children }) => {
     mouseY.set(0);
   };
 
+  const startX = direction === "left" ? -80 : 80;
+
   return (
-    <div className="perspective-1000">
+    <motion.div
+      initial={{ opacity: 0, x: startX }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="perspective-1000"
+    >
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -252,6 +260,6 @@ const TiltArchitectureCard = ({ children }) => {
       >
         {children}
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
